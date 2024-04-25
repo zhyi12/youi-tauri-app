@@ -1,11 +1,5 @@
-import {
-    appDataBase,
-    buildConditions,
-    buildConditionsSql,
-    buildLimitParamValues,
-    wrapSqlCount, wrapSqlLimit
-} from "../../app-dao/dao.util";
-
+import {appDataBase} from "../../app-dao/dao.util";
+import {findByPager} from "../service.util";
 import {
     PROPERTIES,
     INSERT_PROPERTIES,
@@ -73,21 +67,5 @@ export async function remove{{cname}}(id:number):Promise<number>{
  * @param {{name}}
  */
 export async function findByPager(pager:Pager,{{name}}?:{{cname}}) {
-    const conditions = buildConditions({{name}});
-    const querySql = conditions.length?`${SQL_SELECT} where ${buildConditionsSql(conditions)}`:SQL_SELECT;
-    let bindValues:any[] = conditions.map(condition=>condition.value);
-    //获取记录总数
-    const countResult = await appDataBase.select<{count:number}[]>(wrapSqlCount(querySql),bindValues);
-    let totalCount = 0;
-    if(countResult){
-        totalCount = countResult[0].count;
-    }
-    //分页参数
-    bindValues = bindValues.concat(buildLimitParamValues(pager));
-    const records = await appDataBase.select<{{cname}}[]>(wrapSqlLimit(querySql,conditions.length),bindValues);
-
-    return {
-        totalCount,
-        records
-    }
+    return await findByPager(pager,SQL_SELECT,{{name}})
 }
