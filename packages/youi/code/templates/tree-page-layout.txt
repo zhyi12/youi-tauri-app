@@ -1,0 +1,123 @@
+<script>
+    import {onMount,setContext} from "svelte";
+    import {goto} from "$app/navigation";
+    import {page} from "$app/stores";
+    import {ContextMenu,ContextMenuOption,findPathNodes} from "$lib/youi/index";
+    import {confirm} from "$lib/tauri/dialog";
+    import TreeEditor from "$lib/component/tree/TreeEditor.svelte";
+    import {treeStore} from "$lib/app-stores/{{module_name}}/{{name}}Store";
+
+    /**
+     * 页面数据
+     */
+    export let data;
+
+    /**
+     * 打开上下文菜单
+     * @type {boolean}
+     */
+    let open = false;
+    let openDetail = undefined;
+    let x = 0;
+    let y = 0;
+
+    setContext('CONTEXT_{{cname}}',{treeStore});
+    /**
+     *
+     * @param evt
+     * @param node
+     */
+    const openContextMenu = (evt,node) => {
+        //
+        openDetail = node;
+        x = evt.pageX;
+        y = evt.pageY;
+        open = true;
+    }
+    /**
+     *
+     * @param detail
+     */
+    const handle_button_action = ({detail}) => {
+        open = false;
+        const {evt,button,node} = detail;
+        if(button.name === 'more'){
+            openContextMenu(evt,node);
+        }
+    }
+    /**
+     *
+     * @param detail
+     */
+    const handle_tree_select = ({detail}) => {
+        const pathNodes = findPathNodes($treeStore.nodes,detail.id);
+        const path = pathNodes.map(node=>node.id).join('/');
+        goto(`${data.baseUri}/${path}`);
+    }
+
+    /**
+     *
+     * @param dragNode
+     * @param dropNode
+     * @param position
+     */
+    const drop = (dragNode,dropNode,position)=>{
+        const drag{{cname}} = {id:dragNode.id};
+        const drop{{cname}} = {id:dropNode.id,num:dropNode.datas.num};
+
+        const dropPathNodes = findPathNodes($treeStore.nodes,dropNode.id);
+
+        if(dropPathNodes.length >1){
+            Object.assign(drop{{cname}},{pid:dropPathNodes[dropPathNodes.length-2].id});
+        }
+        //
+        treeStore.moveNode(drag{{cname}},drop{{cname}},position);
+    }
+
+    /**
+     *
+     * @param dialogName
+     * @param dialogTitle
+     * @param position
+     */
+    const openDialog = (dialogName,dialogTitle,position='child') => {
+        goto(`${data.baseUri}/${$page.params.path}/dialog-${dialogTitle}/${position}-${openDetail.id}${dialogName}`);
+    }
+
+    const doRemove = async () => {
+        const {id} = openDetail;
+        const confirmed = await confirm(`确认删除${openDetail.text}！`,"删除提示");
+        if(confirmed){
+            await treeStore.removeNode(id);
+        }
+    }
+
+    onMount(()=>{
+         treeStore.fetch(data.activeNodeId,data.expandedNodeIds);
+    });
+</script>
+
+<div class="content flex-row flex-full">
+    <TreeEditor children={$treeStore.nodes} width="280" class="page-left"
+                expandedIds = {$treeStore.expandedIds}
+                activeId = {$treeStore.activeId}
+                {drop}
+                overButtons={[{name:'more',text:'更多'}]}
+                on:button={handle_button_action}
+                on:select ={handle_tree_select}/>
+
+    <div class="flex-1">
+        <slot>
+
+        </slot>
+    </div>
+
+    <ContextMenu {x} {y} bind:open on:close={()=>openDetail = undefined} eventTrigger={false}>
+        <ContextMenuOption labelText="新增下级{{caption}}" on:click={()=>{
+            openDialog('addWorkingReport','新增下级{{caption}}');
+        }}/>
+        <ContextMenuOption labelText="上插入{{caption}}" on:click={()=>openDialog('addWorkingReport','上插入{{caption}}','before')}/>
+        <ContextMenuOption labelText="下插入{{caption}}" on:click={()=>openDialog('addWorkingReport','下插入{{caption}}','after')}/>
+        <ContextMenuOption labelText="删除{{caption}}" on:click={()=>doRemove()}/>
+    </ContextMenu>
+</div>

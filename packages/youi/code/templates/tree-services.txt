@@ -1,0 +1,162 @@
+import {appDataBase} from "../../tauri/tauri.sql";
+import {levelListToTree} from "../../util/data.util";
+import {
+    PROPERTIES,
+    INSERT_PROPERTIES,
+    SQL_INSERT,
+    SQL_REMOVE,
+    SQL_UPDATE,
+    SQL_UPDATE_TEXT,
+    SQL_UPDATE_MOVE,
+    SQL_FIND,
+    SQL_TREE,
+    SQL_FIND_PREV,
+    SQL_TOP_FIND_PREV,
+    SQL_FIND_NEXT,
+    SQL_TOP_FIND_NEXT
+} from "../../app-dao/{{module_name}}/{{name}}.sql";
+
+import type {{"{"}}{{cname}}{{"}"}} from "../../app-entity/{{module_name}}/{{name}}";
+import type {ITreeNode} from "../../youi/tree/Tree";
+
+/**
+ * 主键查询
+ * @param id
+ */
+export async function find{{cname}}(id:number|string):Promise<{{cname}}|null>{
+    const {{name}}s = await appDataBase.select<{{cname}}[]>(SQL_FIND,[id]);
+    if({{name}}s.length){
+        return {{name}}s[0];
+    }
+    return null;
+}
+
+/**
+ * 获取下一个节点
+ * @param id
+ * @param pid
+ * @param num
+ */
+export async function findNextNode(id:number,pid:number|string|undefined,num:number):Promise<{{cname}}|null>{
+    let {{name}}s;
+    if(pid){
+        //非顶级查找下一个节点
+        const result = await appDataBase.select<{{cname}}[]>(SQL_FIND_NEXT,[pid,num]);
+        {{name}}s = [...result];
+    }else{
+        //顶级查找下一个节点
+        const result = await appDataBase.select<{{cname}}[]>(SQL_TOP_FIND_NEXT,[num]);
+        {{name}}s = [...result];
+    }
+
+    if({{name}}s.length){
+        {{name}}s = {{name}}s.filter(({{cname}})=>{{cname}}.id != id);
+        return {{name}}s[0];
+    }
+    return null;
+}
+
+/**
+ * 获取下一个节点
+ * @param id
+ * @param pid
+ * @param num
+ */
+export async function findPrevNode(id:number,pid:number|string|undefined,num:number):Promise<{{cname}}|null>{
+    let {{name}}s;
+    if(pid){
+        const result = await appDataBase.select<{{cname}}[]>(SQL_FIND_PREV,[pid,num]);
+        {{name}}s = [...result];
+    }else{
+        const result = await appDataBase.select<{{cname}}[]>(SQL_TOP_FIND_PREV,[num]);
+        {{name}}s = [...result];
+    }
+
+    if({{name}}s.length){
+        {{name}}s = {{name}}s.filter(({{name}})=>{{name}}.id != id);
+        return {{name}}s[0];
+    }
+    return null;
+}
+
+/**
+ * 树查询
+ * @param id
+ */
+export async function find{{cname}}Tree():Promise<ITreeNode[]>{
+    const {{name}}s = await appDataBase.select<{{cname}}[]>(SQL_TREE,[]);
+    return levelListToTree({{name}}s,(treeNode,{{name}})=>{
+        Object.assign(treeNode,{
+            loaded:true,
+            datas:{
+                num:{{name}}.num
+            }
+        })
+    },true);
+}
+
+/**
+ * 插入{{caption}}
+ * @param {{cname}}
+ */
+export async function insert{{cname}}({{name}}:{{cname}}):Promise<number|string>{
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const bindValues= INSERT_PROPERTIES.map(prop=>{{name}}[prop]||'');
+    //
+    const result = await appDataBase.execute(SQL_INSERT,bindValues);
+    return result.lastInsertId;
+}
+
+/**
+ * 更新插入{{caption}}
+ * @param {{cname}}
+ */
+export async function update{{cname}}({{name}}:{{cname}}):Promise<number>{
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const bindValues= PROPERTIES.map(prop=>{{name}}[prop]||'');
+    //
+    const result = await appDataBase.execute(SQL_UPDATE,bindValues);
+    return result.rowsAffected;
+}
+
+/**
+ * 重命名
+ * @param id
+ * @param text
+ */
+export async function update{{cname}}Text(id:number,text:string):Promise<number>{
+    const result = await appDataBase.execute(SQL_UPDATE_TEXT,[id,text]);
+    return result.rowsAffected;
+}
+
+/**
+ * 节点移动后更新pid及num
+ * @param id
+ * @param pid
+ * @param num
+ */
+export async function update{{cname}}Move(id:number,pid:number|undefined,num:number):Promise<number>{
+    const result = await appDataBase.execute(SQL_UPDATE_MOVE,[id,pid,num]);
+    return result.rowsAffected;
+}
+
+/**
+ * 删除{{caption}}
+ * @param {{cname}}
+ */
+export async function remove{{cname}}(id:number):Promise<number>{
+    const result = await appDataBase.execute(SQL_REMOVE,[id]);
+    return result.rowsAffected;
+}
+
+export function toTreeNode({{name}}:{{cname}}):ITreeNode{
+    return {
+        id:{{name}}.id+'',
+        text:{{name}}.text,
+        datas:{num:{{name}}.num}
+    }
+}
+
+

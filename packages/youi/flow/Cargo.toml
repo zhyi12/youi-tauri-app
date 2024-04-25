@@ -1,0 +1,13 @@
+[package]
+name = "youi-flow"
+version.workspace=true
+edition.workspace=true
+rust-version.workspace=true
+
+[dependencies]
+fehler.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+serde .workspace = true
+itertools.workspace = true
+petgraph.workspace = true

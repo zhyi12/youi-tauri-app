@@ -1,0 +1,93 @@
+import {
+    appDataBase,
+    buildConditions,
+    buildConditionsSql,
+    buildLimitParamValues,
+    wrapSqlCount, wrapSqlLimit
+} from "../../app-dao/dao.util";
+
+import {
+    PROPERTIES,
+    INSERT_PROPERTIES,
+    SQL_FIND,
+    SQL_SELECT,
+    SQL_INSERT,
+    SQL_REMOVE,
+    SQL_UPDATE
+} from "../../app-dao/{{module_name}}/{{name}}.sql";
+
+import type {Pager} from "../../app-dao/dao";
+import type {{"{"}}{{cname}}{{"}"}} from "../../app-entity/{{module_name}}/{{name}}";
+
+/**
+ * 主键查询
+ * @param id
+ */
+export async function find{{cname}}(id:number|string):Promise<{{cname}}|null>{
+    const {{name}}s = await appDataBase.select<{{cname}}[]>(SQL_FIND,[id]);
+    if({{name}}s.length){
+        return {{name}}s[0];
+    }
+    return null;
+}
+
+/**
+ * 插入{{caption}}
+ * @param {{cname}}
+ */
+export async function insert{{cname}}({{name}}:{{cname}}):Promise<number|string>{
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const bindValues= INSERT_PROPERTIES.map(prop=>{{name}}[prop]||'');
+    //
+    const result = await appDataBase.execute(SQL_INSERT,bindValues);
+    return result.lastInsertId;
+}
+
+/**
+ * 更新{{caption}}
+ * @param {{cname}}
+ */
+export async function update{{cname}}({{name}}:{{cname}}):Promise<number>{
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const bindValues= PROPERTIES.map(prop=>{{name}}[prop]||'');
+    //
+    const result = await appDataBase.execute(SQL_UPDATE,bindValues);
+    return result.rowsAffected;
+}
+
+/**
+ * 删除{{caption}}
+ * @param {{cname}}
+ */
+export async function remove{{cname}}(id:number):Promise<number>{
+    const result = await appDataBase.execute(SQL_REMOVE,[id]);
+    return result.rowsAffected;
+}
+
+
+/**
+ * 分页查询
+ * @param pager
+ * @param {{name}}
+ */
+export async function findByPager(pager:Pager,{{name}}?:{{cname}}) {
+    const conditions = buildConditions({{name}});
+    const querySql = conditions.length?`${SQL_SELECT} where ${buildConditionsSql(conditions)}`:SQL_SELECT;
+    let bindValues:any[] = conditions.map(condition=>condition.value);
+    //获取记录总数
+    const countResult = await appDataBase.select<{count:number}[]>(wrapSqlCount(querySql),bindValues);
+    let totalCount = 0;
+    if(countResult){
+        totalCount = countResult[0].count;
+    }
+    //分页参数
+    bindValues = bindValues.concat(buildLimitParamValues(pager));
+    const records = await appDataBase.select<{{cname}}[]>(wrapSqlLimit(querySql,conditions.length),bindValues);
+
+    return {
+        totalCount,
+        records
+    }
+}

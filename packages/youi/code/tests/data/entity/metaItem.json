@@ -1,0 +1,57 @@
+{
+  "name": "metaItem",
+  "cname": "MetaItem",
+  "caption": "桌面项",
+  "tableName": "youi_dmp_meta_item",
+  "properties": [
+    {
+      "name": "id",
+      "caption": "ID",
+      "dataType": "int"
+    },{
+      "name": "name",
+      "caption": "name",
+      "dataType": "string"
+    },{
+      "name": "column_name",
+      "caption": "列名",
+      "dataType": "string"
+    },{
+      "name": "caption",
+      "caption": "中文名",
+      "dataType": "string"
+    },{
+      "name": "full_caption",
+      "caption": "全称",
+      "dataType": "string"
+    },{
+      "name": "data_type",
+      "caption": "数据类型",
+      "dataType": "string"
+    },{
+      "name": "len",
+      "caption": "长度",
+      "dataType": "int"
+    },{
+      "name": "code",
+      "caption": "编码",
+      "dataType": "string"
+    },{
+      "name": "create_time",
+      "caption": "创建时间",
+      "dataType": "number"
+    },{
+      "name": "update_time",
+      "caption": "更新时间",
+      "dataType": "number"
+    },{
+      "name": "creator",
+      "caption": "创建者",
+      "dataType": "text"
+    },{
+      "name": "modified_by",
+      "caption": "修改者",
+      "dataType": "text"
+    }
+  ]
+}

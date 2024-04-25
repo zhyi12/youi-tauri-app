@@ -1,0 +1,218 @@
+import {writable} from "svelte/store";
+
+import {findTreeNode,removeTreeNode} from "../../youi";
+import {moveDataTreeNode} from "../../util/data.util";
+
+import {insert{{cname}},find{{cname}}Tree,find{{cname}},update{{cname}},
+        update{{cname}}Move,remove{{cname}},findNextNode,findPrevNode}
+    from "../../app-services/{{module_name}}/{{name}}Services";
+
+import type {{"{"}}{{cname}}{{"}"}} from "../../app-entity/{{module_name}}/{{name}}";
+import type {ITreeNode} from "../../youi/tree/Tree";
+import type {TreeModel} from "../../app-services";
+
+const createStore = () => {
+    const {subscribe, update, set} = writable(<TreeModel>{nodes:[],expandedIds:[]});
+
+    /**
+     *
+     * @param {{cname}}
+     */
+    async function addChild({{name}}:{{cname}}) {
+        const insertId = await insert{{cname}}({{name}});
+        if(!insertId)return;
+
+        Object.assign({{name}},{id:insertId});
+
+        const treeNode = toTreeNode({{name}});
+        Object.assign(treeNode,{leaf:true});
+        if({{name}}.pid){
+            return update(tree=>{
+                const parent = findTreeNode(tree.nodes,{{name}}.pid);
+                //更新num
+                if(treeNode.datas){
+                    treeNode.datas.num = updateNum(parent.children,{{name}});
+                }
+                tree.expandedIds = [...tree.expandedIds,{{name}}.pid+''];
+                tree.activeId = insertId;
+                parent.children = parent.children||[];
+                parent.children = [...parent.children,treeNode];
+                return tree;
+            });
+        }else{
+            return update(tree=>{
+                //更新num
+                if(treeNode.datas){
+                    treeNode.datas.num = updateNum(tree.nodes,{{name}});
+                }
+                tree.activeId = insertId;
+                tree.nodes.push(treeNode);
+                return tree;
+            });
+        }
+    }
+
+    return {
+        subscribe,
+        /**
+         * 获取树节点数据
+         */
+        fetch:async (activeNodeId:string,init_expandedIds:string[])=>{
+            const treeNodes = await find{{cname}}Tree();
+            let expandedIds:string[] = [];
+            if(treeNodes.length){
+                expandedIds = [treeNodes[0].id,...(treeNodes[0].children||[]).map(child=>child.id)];
+            }
+            expandedIds = [...expandedIds,...(init_expandedIds||[])];
+            return set({nodes:treeNodes,expandedIds,activeId:activeNodeId});
+        },
+        addChild,
+        insertAfter:async (refId:number,{{name}}:{{cname}})=>{
+            const ref{{cname}} = await find{{cname}}(refId);
+            if(ref{{cname}}){
+                const calculatedNum = await calculateNextNum(refId, ref{{cname}}.pid, ref{{cname}}.num);
+                Object.assign({{name}}, {
+                    pid: ref{{cname}}.pid,
+                    num: calculatedNum
+                });
+                return addChild({{name}});
+            }
+        },
+        insertBefore:async (refId:number,{{name}}:{{cname}})=>{
+            const ref{{cname}} = await find{{cname}}(refId);
+            if(ref{{cname}}){
+                {{name}}.num = await calculatePrevNum(refId, ref{{cname}}.pid, ref{{cname}}.num);
+                Object.assign({{name}}, {
+                    pid: ref{{cname}}.pid,
+                });
+                return addChild({{name}});
+            }
+        },
+        /**
+         * 更新节点
+         * @param {{cname}}
+         */
+        updateNode:async({{name}}:{{cname}})=>{
+            //
+            const result = await update{{cname}}({{name}});
+
+            if(result>0){
+                return update(tree=>{
+                    const treeNode = findTreeNode(tree.nodes,{{name}}.id);
+                    if(treeNode){
+                        Object.assign(treeNode,{
+                            text:{{name}}.text
+                        });
+                        tree.activeId = {{name}}.id;
+                    }
+                    return tree;
+                });
+            }
+        },
+        /**
+         * 删除节点
+         * @param id
+         */
+        removeNode:async (id:number)=>{
+            const result = await remove{{cname}}(id);
+            if(result>0){
+                return update(tree=>{
+                    removeTreeNode(tree.nodes,id,null);
+                    return tree;
+                });
+            }
+        },
+        /**
+         * 移动节点
+         */
+        moveNode:async(source:{{cname}},target:{{cname}},position:string)=>{
+            let newPid;
+            let newNum = 1;
+            if('before' === position){
+                newPid = target.pid;
+                const calculatedNum = await calculatePrevNum(target.id,target.pid,target.num);
+                newNum = calculatedNum;
+            }else if('after' === position){
+                newPid = target.pid;
+                const calculatedNum = await calculateNextNum(target.id,target.pid,target.num);
+                newNum = calculatedNum;
+            }else{
+                newPid = target.id;
+            }
+            //更新数据库的pid和num字段
+            const result = await update{{cname}}Move(source.id,newPid,newNum);
+            if(result>0){
+                return update((tree)=>{
+                    moveDataTreeNode(tree.nodes,source,target,position,newNum);
+                    return tree;
+                });
+            }
+        }
+    }
+}
+
+function toTreeNode({{name}}:{{cname}}):ITreeNode{
+    return {
+        id:{{name}}.id+'',
+        text:{{name}}.text,
+        datas:{num:{{name}}.num}
+    }
+}
+
+/**
+ *
+ * @param treeNodes
+ * @param {{cname}}
+ */
+function updateNum(treeNodes:ITreeNode[],{{name}}:{{cname}}) {
+    let num = {{name}}.num;
+    if(!{{name}}.num || {{name}}.num === 1 && treeNodes && treeNodes.length){
+        let maxNum = 1;
+        treeNodes.forEach(node=>{
+            if(node.datas && typeof node.datas.num === 'number'){
+                maxNum = Math.max(maxNum,node.datas.num);
+            }
+        });
+        num = maxNum + 0.5;
+        update{{cname}}Move({{name}}.id,{{name}}.pid,num).then(res=>res);
+    }
+    return num;
+}
+
+
+/**
+ *
+ * @param refId
+ * @param pid
+ * @param num
+ */
+async function calculatePrevNum(refId:number,pid:string|number|undefined,num:number|undefined) {
+    const prevNode = await findPrevNode(refId,pid,num||1);
+    if(prevNode){
+        return ((prevNode.num||1)+(num||1))/2;
+    }else {
+        return (num||1)-0.5;
+    }
+}
+
+/**
+ *
+ * @param refId
+ * @param pid
+ * @param num
+ */
+async function calculateNextNum(refId:number,pid:string|number|undefined,num:number|undefined) {
+    const nextNode = await findNextNode(refId,pid,num||1);
+
+    if(nextNode){
+        return ((nextNode.num||1)+(num||1))/2;
+    }else {
+        return (num||1)+0.5;
+    }
+}
+
+/**
+ * 输出store
+ */
+export const treeStore = createStore();
+

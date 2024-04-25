@@ -1,0 +1,41 @@
+<script lang="ts">
+
+    import {Offcanvas,OffcanvasBody,Form,FormItem,FieldInput} from "$lib/youi/index";
+
+    import type {{"{"}}{{cname}}{{"}"}} from "$lib/app-entity/{{module_name}}/{{name}}";
+
+    /**
+     * 是否弹出
+     */
+    export let isOpen = false;
+    /**
+     * 是否为新增
+     */
+    export let isAdding = false;
+    /**
+     * form数据
+     */
+    export let formRecord:{{cname}} = {};
+    /**
+     *
+     * @param record
+     */
+    export let onSubmit = async (record) => true;
+
+</script>
+
+<Offcanvas bind:isOpen placement="end" width="600px"
+           toggle={()=>isOpen = !isOpen} header={(isAdding?'新增':'修改')+'{{caption}}'}
+           on:close={()=>{
+        isAdding = false;
+    }}>
+    <OffcanvasBody>
+        <Form class="padding" {onSubmit}>
+            {% for property in properties %}{% if !loop.first%}
+            <FormItem class="input-group" caption="{{property.caption}}">
+                <FieldInput notNull={true} property="{{property.name}}" bind:value={formRecord.{{property.name}}}/>
+            </FormItem>{% endif %}{% endfor %}
+        </Form>
+    </OffcanvasBody>
+</Offcanvas>
+

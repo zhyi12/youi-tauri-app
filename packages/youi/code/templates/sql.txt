@@ -1,0 +1,8 @@
+
+create table  {{ table_name }}
+(
+    id    INTEGER      not null
+        primary key autoincrement,
+{% for property in properties %}
+    {{ property.name }}   {% match property.data_type.as_str() %} {% when "int" %} INTEGER {% when "number" %} real {% else %} TEXT {% endmatch %},{% endfor %}
+);

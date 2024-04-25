@@ -1,0 +1,61 @@
+{
+  "name": "desktopItem",
+  "cname": "DesktopItem",
+  "caption": "桌面项",
+  "tableName": "youi_desktop_item",
+  "properties": [
+    {
+      "name": "id",
+      "caption": "ID",
+      "dataType": "int"
+    },{
+      "name": "pid",
+      "caption": "PID",
+      "dataType": "int"
+    },{
+      "name": "num",
+      "caption": "序号",
+      "dataType": "float"
+    },{
+      "name": "text",
+      "caption": "名称",
+      "dataType": "string"
+    },{
+      "name": "item_type",
+      "caption": "项类型",
+      "dataType": "string"
+    },{
+      "name": "uri",
+      "caption": "uri",
+      "dataType": "string"
+    },{
+      "name": "image",
+      "caption": "image",
+      "dataType": "string"
+    },{
+      "name": "icon",
+      "caption": "图标",
+      "dataType": "string"
+    },{
+      "name": "params",
+      "caption": "参数",
+      "dataType": "string"
+    },{
+      "name": "create_time",
+      "caption": "创建时间",
+      "dataType": "number"
+    },{
+      "name": "update_time",
+      "caption": "更新时间",
+      "dataType": "number"
+    },{
+      "name": "creator",
+      "caption": "创建者",
+      "dataType": "text"
+    },{
+      "name": "modified_by",
+      "caption": "修改者",
+      "dataType": "text"
+    }
+  ]
+}

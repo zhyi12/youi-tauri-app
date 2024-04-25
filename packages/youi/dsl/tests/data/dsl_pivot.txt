@@ -1,0 +1,1 @@
+read_csv("/Volumes/D/youi-app-data/我的数据/pivot.csv").pivot(["v1","v2","v3"],["industry_code"],["reg_type"])

@@ -1,0 +1,23 @@
+[package]
+name = "youi-dsl"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+log.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+serde.workspace = true
+itertools.workspace = true
+polars-core.workspace = true
+polars-lazy={workspace = true,features=["is_in"]}
+polars-io.workspace = true
+arrow2.workspace = true
+
+rhai = {workspace=true,features=["serde","internals"]}
+
+youi-dataframe={version="1.0.0",path="../dataframe",features=["sqlite_dataframe","search_dataframe","parquet_dataframe"]}
+youi-report={version="1.0.0",path="../report"}
+
+[dev-dependencies]
+youi-test={version="1.0.0",path="../test"}

@@ -1,0 +1,26 @@
+import type {LayoutLoad,LayoutLoadEvent} from './$types';
+
+/**
+ *
+ * @param params
+ */
+export const load: LayoutLoad = async ({params}:LayoutLoadEvent) => {
+    const pathMenuPaths = [{text:''}];
+
+    const baseUri = `/census/report`;
+
+    let activeNodeId;
+    let expandedNodeIds:string[] = [];
+    if(params.path){
+        const paths = params.path.split('/');
+        activeNodeId = paths.pop();
+        expandedNodeIds = [...paths];
+    }
+
+    return {
+        pathMenuPaths,
+        baseUri,
+        activeNodeId,
+        expandedNodeIds
+    }
+}

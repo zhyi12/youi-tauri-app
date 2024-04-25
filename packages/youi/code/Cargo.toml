@@ -1,0 +1,14 @@
+[package]
+name = "youi-code"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+log.workspace = true
+serde_json.workspace = true
+serde = { workspace=true, features = ["derive"] }
+askama = "0.12.1"
+
+[dev-dependencies]
+youi-test={version="1.0.0",path="../test"}
+regex.workspace = true

@@ -1,0 +1,12 @@
+[package]
+name = "youi-search"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+serde_json.workspace=true
+serde = { workspace=true, features = ["derive"] }
+tantivy = "0.18"
+tantivy-jieba = "0.6"
+cang-jie = "0.14"
+jieba-rs.workspace=true

@@ -1,0 +1,23 @@
+<script>
+    import {getContext} from "svelte";
+    import {Form,FormItem,FieldInput} from "$lib/youi/index";
+
+    const {treeStore} = getContext('CONTEXT_{{cname}}');
+
+    export let data;
+
+    const handle_submit = () => {
+        treeStore.updateNode(data.{{name}});
+    }
+</script>
+
+<Form class="padding" onSubmit={handle_submit}>
+{% for property in properties %}
+    <FormItem caption="{{property.caption}}" class="input-group">
+        <FieldInput bind:value={data.{{name}}.{{ property.name }}}/>
+    </FormItem>
+{% endfor %}
+
+</Form>
+<!-- dialog -->
+<slot/>

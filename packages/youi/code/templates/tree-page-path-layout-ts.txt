@@ -1,0 +1,17 @@
+import type {LayoutLoad,LayoutLoadEvent} from './$types';
+import {findWorkingReport} from "$lib/app-services/{{module_name}}/{{name}}Services";
+
+export const load: LayoutLoad = async ({params}:LayoutLoadEvent) => {
+    const paths = params.path.split('/');
+    const id = paths.pop();
+
+    let {{name}};
+    if(id){
+        const result = await find{{cname}}(id);
+        {{name}} = {...result};
+    }
+
+    return {
+        {{name}}
+    };
+}

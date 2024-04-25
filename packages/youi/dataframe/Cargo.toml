@@ -1,0 +1,39 @@
+[package]
+name = "youi-dataframe"
+version.workspace=true
+edition.workspace=true
+
+[dependencies]
+fehler.workspace = true
+thiserror.workspace = true
+polars-core = {workspace = true,features=["strings","diagonal_concat","simd"]}
+polars-lazy = {workspace = true,features=["concat_str","strings","csv","dtype-struct","is_in","pivot"]}
+polars-io = {workspace = true,features=["json","simd"]}
+polars-utils.workspace = true
+polars-ops.workspace = true
+polars-time.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+itertools.workspace = true
+sqlx = { workspace = true, features = ["sqlite","runtime-tokio-rustls"], optional = true }
+
+dotenv = "0.10"
+futures = {version="0.3.21",features=["thread-pool"]}
+futures-util = "0.3.21"
+
+youi-search={version="1.0.0",path="../search", optional = true }
+youi-sql={version="1.0.0",path="../sql", optional = true }
+
+arrow2 = {version="0.17",features=["compute_concatenate"]}
+sqlparser = {version="0.20.0",optional = true}
+calamine = {version="0.18.0",optional = true}
+
+[features]
+any = []
+sqlite_dataframe=["sqlx","sqlparser","youi-sql","youi-sql/src_sqlite"]
+xls_dataframe=["calamine"]
+search_dataframe=["youi-search"]
+parquet_dataframe=[
+    "polars-io/parquet",
+    "polars-lazy/parquet"
+]

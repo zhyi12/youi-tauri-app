@@ -1,0 +1,358 @@
+{
+  "nodes": [
+    {
+      "id": "start",
+      "text": "开始节点",
+      "nodeObject": {
+        "name": "Start"
+      }
+    },
+    {
+      "id": "node1",
+      "text": "工业增加值率",
+      "width": 160,
+      "height": 26,
+      "x": 20,
+      "y": 20,
+      "nodeObject": {
+        "name": "CsvReader",
+        "uri": "${dataDir}/我的数据/zh/工业增加值率.csv",
+        "mapping": [
+          {
+            "name": "行业代码",
+            "dataType": "text"
+          },
+          {
+            "name": "行业名称",
+            "dataType": "text"
+          },{
+            "name": "本期",
+            "dataType": "number"
+          },{
+            "name": "上年同期",
+            "dataType": "number"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node2",
+      "text": "工业品出厂价格指数",
+      "width": 160,
+      "height": 26,
+      "x": 20,
+      "y": 68,
+      "nodeObject": {
+        "name": "CsvReader",
+        "uri": "${dataDir}/我的数据/zh/工业品出厂价格指数.csv",
+        "mapping": [
+          {
+            "name": "行业代码",
+            "dataType": "text"
+          },
+          {
+            "name": "行业名称",
+            "dataType": "text"
+          },{
+            "name": "本月价格指数",
+            "dataType": "number"
+          },{
+            "name": "累计价格指数",
+            "dataType": "number"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node12",
+      "text": "参数表",
+      "width": 160,
+      "height": 26,
+      "x": 40,
+      "y": 116,
+      "nodeObject": {
+        "name": "Join",
+        "left":"node1",
+        "right":"node2",
+        "left_on":"行业代码",
+        "right_on":"行业代码",
+        "mapping":[{
+          "name": "行业代码",
+          "dataType": "string"
+        }]
+      }
+    },
+    {
+      "id": "node3",
+      "text": "B204-1",
+      "width": 160,
+      "height": 26,
+      "x": 20,
+      "y": 164,
+      "nodeObject": {
+        "name": "CsvReader",
+        "uri": "${dataDir}/我的数据/zh/B204-1.csv"
+      }
+    },
+    {
+      "id": "node4",
+      "text": "管理机构",
+      "width": 160,
+      "height": 26,
+      "x": 20,
+      "y": 212,
+      "nodeObject": {
+        "name": "CsvReader",
+        "uri": "${dataDir}/我的数据/zh/管理机构.csv",
+        "mapping":[{
+          "name": "ZZJGDM",
+          "dataType": "string"
+        }]
+      }
+    },
+    {
+      "id": "node8",
+      "text": "合并管理机构",
+      "width": 160,
+      "height": 26,
+      "x": 40,
+      "y": 260,
+      "nodeObject": {
+        "name": "Join",
+        "left": "node3",
+        "right": "node4",
+        "left_on": "ZZJGDM",
+        "right_on": "ZZJGDM"
+      }
+    },
+    {
+      "id": "node5",
+      "text": "广电生产数据",
+      "width": 160,
+      "height": 26,
+      "x": 40,
+      "y": 308,
+      "nodeObject": {
+        "name": "CsvReader",
+        "uri": "${dataDir}/我的数据/zh/广电生产数据.csv",
+        "mapping":[{
+          "name": "ZZJGDM",
+          "dataType": "string",
+          "value": "123456789"
+        },{
+          "name": "行业代码",
+          "dataType": "number",
+          "value": 4410
+        },{
+          "name": "管理机构",
+          "dataType": "number",
+          "value": 440402403000
+        },{
+          "name": "分区",
+          "dataType": "string",
+          "value": "小香洲"
+        }]
+      }
+    },
+    {
+      "id": "node6",
+      "text": "合并基层数据",
+      "width": 160,
+      "height": 26,
+      "x": 60,
+      "y": 356,
+      "nodeObject": {
+        "name": "Union",
+        "ordered": ["node5","node8"],
+        "mapping": [
+          {
+            "name": "ZZJGDM",
+            "inputColumnNames": ["ZZJGDM","ZZJGDM"]
+          },{
+            "name": "管理机构",
+            "inputColumnNames": ["管理机构","管理机构"]
+          },{
+            "name": "分区",
+            "inputColumnNames": ["分区","分区"]
+          },{
+            "name": "行业代码",
+            "inputColumnNames": ["行业代码","行业代码"]
+          },{
+            "name": "工业总产值本月",
+            "inputColumnNames": ["工业总产值本月","工业总产值本月"]
+          },{
+            "name": "工业总产值本月止累计",
+            "inputColumnNames": ["工业总产值本月止累计","工业总产值本月止累计"]
+          },{
+            "name": "工业总产值去年同月",
+            "inputColumnNames": ["工业总产值去年同月","工业总产值去年同月"]
+          },{
+            "name": "工业总产值去年同月止累计",
+            "inputColumnNames": ["工业总产值去年同月止累计","工业总产值去年同月止累计"]
+          }
+        ]
+      }
+    },
+    {
+      "id": "node61",
+      "text": "行业中类",
+      "width": 160,
+      "height": 26,
+      "x": 80,
+      "y": 404,
+      "nodeObject": {
+        "name": "WithColumns",
+        "columns": [
+          {
+            "name": "行业中类",
+            "expression": "concat_str([col(\"行业代码\").cast_str().str_slice(0,3),lit(\"0\")],\"\")"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node62",
+      "text": "按行业中类汇总",
+      "width": 160,
+      "height": 26,
+      "x": 80,
+      "y": 404,
+      "nodeObject": {
+        "name": "Agg",
+        "groupNames": [
+          "行业中类"
+        ],
+        "measures": [
+          {
+            "name": "工业总产值本月",
+            "aggregate": "sum"
+          },
+          {
+            "name": "工业总产值本月止累计",
+            "aggregate": "sum"
+          },{
+            "name": "工业总产值去年同月",
+            "aggregate": "sum"
+          },{
+            "name": "工业总产值去年同月止累计",
+            "aggregate": "sum"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node7",
+      "text": "合并参数数据",
+      "width": 160,
+      "height": 26,
+      "x": 80,
+      "y": 404,
+      "nodeObject": {
+        "name": "Join",
+        "left": "node62",
+        "right": "node12",
+        "left_on": "行业中类",
+        "right_on": "行业代码"
+      }
+    },
+    {
+      "id": "node9",
+      "text": "增加值计算",
+      "width": 160,
+      "height": 26,
+      "x": 80,
+      "y": 452,
+      "nodeObject": {
+        "name": "WithColumns",
+        "columns": [
+          {
+            "name": "本期增加值",
+            "expression": "col(\"工业总产值本月_sum\").mul(col(\"本期\")).div(lit(100))"
+          },
+          {
+            "name": "本期可比价增加值",
+            "expression": "when(col(\"本月价格指数\").eq(lit(0))).then(col(\"工业总产值本月_sum\").mul(col(\"本期\")).div(lit(100))).otherwise(col(\"工业总产值本月_sum\").div(col(\"本月价格指数\")).mul(col(\"本期\")))"
+          }
+        ]
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "id": "st1",
+      "from": "start",
+      "to": "node1"
+    },{
+      "id": "st2",
+      "from": "start",
+      "to": "node2"
+    },{
+      "id": "st2",
+      "from": "start",
+      "to": "node3"
+    },{
+      "id": "st2",
+      "from": "start",
+      "to": "node4"
+    },{
+      "id": "st2",
+      "from": "start",
+      "to": "node5"
+    },
+    {
+      "id": "t1",
+      "from": "node1",
+      "to": "node12"
+    },
+    {
+      "id": "t2",
+      "from": "node2",
+      "to": "node12"
+    },
+    {
+      "id": "t4",
+      "from": "node3",
+      "to": "node8"
+    },
+    {
+      "id": "t5",
+      "from": "node4",
+      "to": "node8"
+    },
+    {
+      "id": "t6",
+      "from": "node5",
+      "to": "node6"
+    },
+    {
+      "id": "t7",
+      "from": "node8",
+      "to": "node6"
+    },
+    {
+      "id": "t3",
+      "from": "node12",
+      "to": "node7"
+    },
+    {
+      "id": "t8",
+      "from": "node6",
+      "to": "node61"
+    },
+    {
+      "id": "t81",
+      "from": "node62",
+      "to": "node7"
+    },
+    {
+      "id": "t9",
+      "from": "node7",
+      "to": "node9"
+    },
+    {
+      "id": "t10",
+      "from": "node61",
+      "to": "node62"
+    }
+  ]
+}

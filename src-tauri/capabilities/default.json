@@ -1,0 +1,57 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "enables the default permissions",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "path:default",
+    "event:default",
+    "window:default",
+    "webview:default",
+    "app:default",
+    "resources:default",
+    "image:allow-size",
+    "image:allow-rgba",
+    "image:allow-from-path",
+    "menu:default",
+    "tray:default",
+    "dialog:allow-message",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "dialog:allow-confirm",
+    "dialog:allow-ask",
+    "sql:allow-load",
+    "sql:allow-select",
+    "sql:allow-execute",
+    "log:default",
+    "http:default",
+    "clipboard-manager:allow-read-text",
+    "clipboard-manager:allow-read-image",
+    "clipboard-manager:allow-write-text",
+    "clipboard-manager:allow-write-image",
+    "webview:allow-internal-toggle-devtools",
+    "fs:allow-exists",
+    "fs:allow-read",
+    "fs:allow-write",
+    "event:allow-listen",
+    "event:allow-unlisten",
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-create",
+      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-write-file",
+      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-mkdir",
+      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+    }
+  ]
+}

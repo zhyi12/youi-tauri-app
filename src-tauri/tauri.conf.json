@@ -1,0 +1,42 @@
+{
+  "productName": "demo",
+  "version": "0.1.0",
+  "identifier": "youi",
+  "build": {
+    "frontendDist": "../build",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "plugins": {
+    "sql":{
+      "preload": ["sqlite:app.db"]
+    }
+  },
+  "app": {
+    "withGlobalTauri":true,
+    "windows": [
+      {
+        "fullscreen": false,
+        "maximized": true,
+        "resizable": true,
+        "title": "智慧统计-数字化工作桌面",
+        "visible": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

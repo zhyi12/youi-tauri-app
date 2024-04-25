@@ -1,0 +1,70 @@
+import {writable} from "svelte/store";
+
+import {SQL_SELECT} from "../../app-dao/{{module_name}}/{{name}}.sql";
+import {insert{{cname}},update{{cname}},remove{{cname}},findByPager} from "../../app-services/{{module_name}}/{{name}}Services";
+
+import type {{"{"}}{{cname}}{{"}"}} from "../../app-entity/{{module_name}}/{{name}}";
+import type {Pager} from "../../app-dao/dao";
+
+/**
+ *
+ */
+export const createStore = () => {
+    const {subscribe, update, set} = writable<{records:{{cname}}[],totalCount:number}>({records:[],totalCount:0});
+
+    return {
+        subscribe,
+        /**
+         * 获取数据
+         */
+        findByPager: async (pager:Pager,{{name}}?:{{cname}}) => {
+             const result = await findByPager(pager,{{name}});
+             return set(result);
+        },
+        /**
+         *
+         * @param {{name}}
+         */
+        add{{cname}}: async ({{name}}:{{cname}})=>{
+            const insertId = await insert{{cname}}({{name}});
+            Object.assign({{name}},{id:insertId});
+            //
+            return update(pagerRecords=>{
+                return {totalCount:pagerRecords.totalCount+1,records:[{{name}},...pagerRecords.records]};
+            })
+        },
+        /**
+         * 删除
+         * @param id
+         */
+        remove{{cname}}:async (id:number) =>{
+            const result = await remove{{cname}}(id);
+            return update(pagerRecords=>{
+                return {totalCount:pagerRecords.totalCount-1,records:pagerRecords.records.filter(o=>o.id !== id)};
+            })
+        },
+        /**
+         *
+         * @param {{name}}
+         */
+        update{{cname}}:async ({{name}}:{{cname}})=>{
+
+            const result = await update{{cname}}({{name}});
+
+            return update(pagerRecords=>{
+                return {totalCount:pagerRecords.totalCount,
+                    records:pagerRecords.records.map(o=>{
+                        if(o.id == {{name}}.id){
+                            return {{name}};
+                        }
+                        return o;
+                    })};
+            })
+        }
+    }
+}
+
+/**
+ *
+ */
+export const {{name}}Store = createStore();

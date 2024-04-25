@@ -1,0 +1,29 @@
+export interface DesktopItem{
+
+    /* ID */
+    id: number ,
+    /* PID */
+    pid: number ,
+    /* 序号 */
+    num: string ,
+    /* 名称 */
+    text: string ,
+    /* 项类型 */
+    item_type: string ,
+    /* uri */
+    uri: string ,
+    /* image */
+    image: string ,
+    /* 图标 */
+    icon: string ,
+    /* 参数 */
+    params: string ,
+    /* 创建时间 */
+    create_time: number ,
+    /* 更新时间 */
+    update_time: number ,
+    /* 创建者 */
+    creator: string ,
+    /* 修改者 */
+    modified_by: string ,
+}

@@ -1,0 +1,31 @@
+[package]
+name = "tauri-plugin-sql"
+version = "1.1.0"
+description = "Interface with SQL databases."
+authors = { workspace = true }
+license = { workspace = true }
+edition = { workspace = true }
+rust-version = { workspace = true }
+repository = { workspace = true }
+
+[package.metadata.docs.rs]
+features = ["sqlite"]
+rustc-args = ["--cfg", "docsrs"]
+rustdoc-args = ["--cfg", "docsrs"]
+
+[build-dependencies]
+tauri-plugin = { workspace = true, features = ["build"] }
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+tauri = { workspace = true }
+log = { workspace = true }
+thiserror = { workspace = true }
+futures-core = "0.3"
+sqlx = { version = "0.7", features = ["json", "time"] }
+time = "0.3"
+tokio = { version = "1", features = ["sync"] }
+
+[features]
+sqlite = ["sqlx/sqlite", "sqlx/runtime-tokio"]

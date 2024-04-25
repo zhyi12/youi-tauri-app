@@ -1,0 +1,18 @@
+[package]
+name = "youi-etl"
+version.workspace=true
+edition.workspace=true
+rust-version.workspace=true
+
+[dependencies]
+log.workspace = true
+fehler.workspace = true
+thiserror.workspace = true
+serde_json.workspace = true
+serde .workspace = true
+itertools.workspace = true
+
+youi-flow={version="1.0.0",path="../flow"}
+
+[dev-dependencies]
+youi-test={version="1.0.0",path="../test"}

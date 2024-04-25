@@ -1,0 +1,132 @@
+{
+  "nodes": [
+    {
+      "id": "start",
+      "text": "开始节点",
+      "nodeObject": {
+        "name": "Start"
+      }
+    },
+    {
+      "id": "node1",
+      "text": "605数据",
+      "width": 160,
+      "height": 26,
+      "x": 20,
+      "y": 20,
+      "nodeObject": {
+        "name": "CsvReader",
+        "uri": "${dataDir}/我的数据/605.csv",
+        "mapping": [
+          {
+            "name": "respondent_id",
+            "dataType": "text"
+          },
+          {
+            "name": "area_id",
+            "dataType": "text"
+          },{
+            "name": "period_id",
+            "dataType": "text"
+          },{
+            "name": "C_1",
+            "dataType": "number"
+          },{
+            "name": "C_2",
+            "dataType": "number"
+          },{
+            "name": "C_18",
+            "dataType": "number"
+          },{
+            "name": "C_19",
+            "dataType": "number"
+          },{
+            "name": "C_20",
+            "dataType": "number"
+          },{
+            "name": "C_21",
+            "dataType": "number"
+          },{
+            "name": "C_22",
+            "dataType": "number"
+          },{
+            "name": "C_23",
+            "dataType": "number"
+          },{
+            "name": "C_24",
+            "dataType": "number"
+          },{
+            "name": "C_25",
+            "dataType": "number"
+          },{
+            "name": "C_26",
+            "dataType": "number"
+          },{
+            "name": "C_27",
+            "dataType": "number"
+          },{
+            "name": "C_28",
+            "dataType": "number"
+          },{
+            "name": "C_29",
+            "dataType": "number"
+          }
+        ]
+      }
+    },
+    {
+      "id": "node2",
+      "text": "列转行",
+      "nodeObject": {
+        "name": "StatsFctTransform",
+        "keys": ["respondent_id","period_id","area_id"],
+        "catalogName": "product_code",
+        "columnNumStart":18,
+        "columnNamePrefix": "C_",
+        "indicators": [{
+          "code": "indicator1",
+          "text": ""
+        },{
+          "code": "indicator2",
+          "text": ""
+        },{
+          "code": "indicator3",
+          "text": ""
+        }],
+        "items": [
+          {
+            "code": "01",
+            "text": ""
+          },{
+            "code": "02",
+            "text": ""
+          },{
+            "code": "03",
+            "text": ""
+          },{
+            "code": "04",
+            "text": ""
+          }
+        ]
+      }
+    },
+    {
+      "id":"node3",
+      "text":"写入数据",
+      "nodeObject": {
+        "name": "WriteParquet"
+      }
+    }
+  ],
+  "transitions": [
+    {
+      "id": "st1",
+      "from": "start",
+      "to": "node1"
+    },{
+      "id": "st2",
+      "from": "node1",
+      "to": "node2"
+    }
+  ]
+}
