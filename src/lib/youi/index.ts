@@ -1,6 +1,9 @@
 
 export {default as Button} from './button/Button.svelte';
-export {default as DataTable} from './table/DataTable.svelte';
+export {default as DataTable,cellComponent} from './table/DataTable.svelte';
+export {default as ColumnButtons} from './table/column/ColumnButtons.svelte';
+export {default as TabContent} from './tabs/TabContent.svelte';
+export {default as TabPane} from './tabs/TabPane.svelte';
 export {default as Offcanvas} from './offcanvas/Offcanvas.svelte';
 
 export {default as RecursiveList} from './list/RecursiveList.svelte';

@@ -48,6 +48,7 @@ export async function updateMetaItem(metaItem:MetaItem):Promise<number>{
     // @ts-ignore
     const bindValues= PROPERTIES.map(prop=>metaItem[prop]||'');
     //
+    console.log(SQL_UPDATE,bindValues)
     const result = await appDataBase.execute(SQL_UPDATE,bindValues);
     return result.rowsAffected;
 }

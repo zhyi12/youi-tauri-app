@@ -44,10 +44,10 @@
 		</div>
 		<LeftMenu menus={data.menus} activeModule={data.activeModule}/>
 	</div>
-	<div></div>
-	<main class="lg:pl-20 h-dvh">
+	<main class="lg:pl-20 h-dvh flex flex-col">
 		<Header navPaths={$navPaths}/>
-		<slot/>
+		<div class="flex flex-1 h-0">
+			<slot/>
+		</div>
 	</main>
-
 </div>

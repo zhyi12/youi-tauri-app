@@ -23,7 +23,6 @@ export const createStore = () => {
          */
         findByPager: async (pager:Pager,metaItem?:MetaItem) => {
              const result = await findByPager(pager,metaItem);
-             console.log(result)
              return set(result);
         },
         /**

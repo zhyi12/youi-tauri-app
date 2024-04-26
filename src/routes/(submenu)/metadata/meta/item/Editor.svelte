@@ -7,34 +7,77 @@
 
     export let title = '新增数据项';
 
-    let name;
+    /** ------------  数据项属性  -------------*/
+    export let id = '';
 
-    let caption;
+    export let name = '';
 
-    const addMetaItem = async () => {
+    export let column_name = '';
+
+    export let caption = '';
+
+    export let full_caption = '';
+
+    export let data_type = '';
+
+    export let create_time = 0;
+
+    export let len = 0;
+
+    export let code = '';
+
+    export let creator = '';
+
+    export let modified_by = '';
+
+    /**
+     * 保存数据项
+     */
+    const saveMetaItem = async () => {
         let time = new Date().getTime();
-        await metaItemStore.addMetaItem({
+        let metaItem = {
             name,
             column_name:snakeCase(name),
             caption,
+            full_caption,
+            data_type,
+            len,
+            code,
+            creator,
+            modified_by,
             update_time:time,
             create_time:time
-        });
+        };
+        if(id){
+            Object.assign(metaItem,{id,create_time});
+            await metaItemStore.updateMetaItem(metaItem);
+        }else{
+            await metaItemStore.addMetaItem(metaItem);
+        }
 
         isOpen = false;
         clear();
     }
 
     const clear = () => {
+        id = '';
         name = '';
+        column_name = '';
         caption = '';
+        full_caption = '';
+        data_type = '';
+        create_time = 0;
+        len = 0;
+        code = '';
+        creator = '';
+        modified_by = '';
     }
 
 </script>
 
 <Offcanvas bind:isOpen contentClass="p-2">
     <Toolbar>
-        <Button title="保存数据项" class="btn-sm btn-ghost" on:click={()=>addMetaItem()}>
+        <Button title="保存数据项" class="btn-sm btn-ghost" on:click={()=>saveMetaItem()}>
             <Icon data={saveIcon}/>
         </Button>
         <div class="navbar-end text-right w-full font-bold">
@@ -52,5 +95,4 @@
             <input type="text" class="grow form-control" placeholder="请输入中文描述" bind:value={caption} />
         </label>
     </div>
-
 </Offcanvas>
