@@ -1,3 +1,15 @@
+<script context="module" lang="ts">
+
+    export interface ButtonInfo{
+        name:string,
+        icon?:string,
+        text?:string,
+        title?:string,
+        tooltipPosition?:string
+    }
+
+</script>
+
 <script>
 
     import classnames from "../util/classname";
