@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+    export const cellComponent = (component: unknown, props: Record<string, unknown>) => ({
+        component,
+        props
+    });
+</script>
+
 <script lang="ts">
     import {createEventDispatcher} from "svelte";
     import { writable } from 'svelte/store'
@@ -100,7 +107,7 @@
 
 </script>
 
-<div class="p-2 overflow-x-auto">
+<div class="p-2 overflow-auto">
     <table class="table table-zebra table-pin-rows table-pin-cols">
         <thead>
         {#each $table.getHeaderGroups() as headerGroup}
@@ -129,8 +136,19 @@
         {#each $table.getRowModel().rows as row}
             <tr class="hover">
                 {#each row.getVisibleCells() as cell}
+                    {@const result =
+                        typeof cell.column.columnDef.cell === 'function'
+                            ? cell.column.columnDef.cell(cell.getContext())
+                            : cell.column.columnDef.cell}
                     <td>
-                        <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())}/>
+                        {#if result.component && result.props}
+                            <svelte:component this={result.component} {...result.props} />
+                        {:else if typeof result === 'string' || typeof result === 'number'}
+                            {result}
+                        {:else}
+                            <!-- flexRender is REALLY slow -->
+                            <svelte:component this={flexRender(cell.column.columnDef.cell, cell.getContext())} />
+                        {/if}
                     </td>
                 {/each}
             </tr>
