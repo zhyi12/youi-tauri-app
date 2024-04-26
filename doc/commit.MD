@@ -13,3 +13,13 @@ ci:  持续集成相关文件修改(dockerFile 等文件)
 chore:  其他修改(不在上述类型中的修改)
 release:  发布新版本
 workflow:  工作流相关文件修改
+
+举例:
+fix: 修复XXX问题
+fix: 修复Review问题单(commit id)
+feat: 删除无用字段
+feat: 支持XXX
+feat: 改进XXX
+feat: 优化XXX
+feat: 完善XXX
+feat: 实现XXX需求功能
