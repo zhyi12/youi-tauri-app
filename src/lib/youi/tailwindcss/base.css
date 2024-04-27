@@ -1,0 +1,20 @@
+.youi-tree .dropping{
+    @apply bg-yellow-100 !important;
+    cursor:move;
+}
+
+.youi-tree li>a{
+    @apply border-y-2 border-transparent;
+}
+
+.youi-tree .dropping.dropping-before>a{
+    border-top-color: rgb(162, 199, 247);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.youi-tree .dropping.dropping-after>a{
+    border-bottom-color: rgb(162, 199, 247);
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
