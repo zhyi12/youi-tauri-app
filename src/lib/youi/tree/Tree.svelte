@@ -118,6 +118,12 @@
 
         if(droppable && isDropping){
             let dropDom = event.target.closest('li');
+
+            if(!dropDom){
+                releaseDropping();
+                return;
+            }
+
             if(dropDom && (!currentDropDom || dropDom != currentDropDom)){
                 releaseDropping();
                 currentDropDom = dropDom;
@@ -153,15 +159,14 @@
     }
 
     const mouseStop = () => {
-        if(dragItem){
-
-        }
-
         if( droppable && isDropping && currentDropDom){
-            if(dragItem){
-                const position = currentDropDom.classList.contains('dropping-before')?'before':
-                    (currentDropDom.classList.contains('dropping-after')?'after':'child');
-                dispatch('move',{position,from:dragItem.id,to:currentDropDom.getAttribute('id')});
+            if(dragItem && currentDropDom.classList.contains('dropping')){
+                const targetId = currentDropDom.getAttribute('id');
+                if(targetId !== dragItem.id){
+                    const position = currentDropDom.classList.contains('dropping-before')?'before':
+                        (currentDropDom.classList.contains('dropping-after')?'after':'child');
+                    dispatch('move',{position,from:dragItem.id,to:targetId});
+                }
             }
             releaseDropping();
         }
@@ -178,6 +183,7 @@
     function releaseDropping() {
         if(currentDropDom){
             currentDropDom.dispatchEvent(new CustomEvent('releaseDropping',{detail:{},bubbles:true}));
+            currentDropDom = undefined;
         }
     }
 
