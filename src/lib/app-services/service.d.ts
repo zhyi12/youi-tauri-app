@@ -31,6 +31,11 @@ export interface ITreeService<T extends TreeObject>{
      * @param record
      */
     insert: (record:T)=>Promise<TreeItem>,
+    /**
+     *
+     * @param record
+     */
+    update: (record:T)=>Promise<TreeItem>,
 
     /**
      * 重命名
