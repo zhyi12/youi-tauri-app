@@ -84,7 +84,10 @@
             {#if moreButtons.length}
                 <div class="dropdown dropdown-end">
                     <Tooltip title="更多" class="tooltip-bottom">
-                        <div tabindex="0" role="button" on:mousedown|stopPropagation on:dblclick|stopPropagation>
+                        <div tabindex="0" role="button"
+                             on:mousedown|stopPropagation
+                             on:click|stopPropagation
+                             on:dblclick|stopPropagation>
                             <Icon class="w-4 h-4 pr-2" data={ellipsisHIcon}/>
                         </div>
                     </Tooltip>
