@@ -1,0 +1,49 @@
+{
+  "name": "macroGroupItem",
+  "cname": "MacroGroupItem",
+  "caption": "分组项",
+  "tableName": "stats_macro_group_item",
+  "properties": [
+    {
+      "name": "id",
+      "caption": "分组项ID",
+      "dataType": "int"
+    },{
+      "name": "text",
+      "caption": "名称",
+      "dataType": "string"
+    },{
+      "name": "pid",
+      "caption": "父级ID",
+      "dataType": "int"
+    },{
+      "name": "group_id",
+      "caption": "分组ID",
+      "dataType": "int"
+    },{
+      "name": "num",
+      "caption": "顺序号",
+      "dataType": "number"
+    },{
+      "name": "desc",
+      "caption": "分组项解释",
+      "dataType": "string"
+    },{
+      "name": "create_time",
+      "caption": "创建时间",
+      "dataType": "number"
+    },{
+      "name": "update_time",
+      "caption": "更新时间",
+      "dataType": "number"
+    },{
+      "name": "creator",
+      "caption": "创建者",
+      "dataType": "text"
+    },{
+      "name": "modified_by",
+      "caption": "修改者",
+      "dataType": "text"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
-import {appDataBase} from "../../tauri/tauri.sql";
-import {levelListToTree} from "../../util/data.util";
+import {appDataBase} from "../../app-dao/dao.util";
+
 import {
     PROPERTIES,
     INSERT_PROPERTIES,
@@ -17,7 +17,6 @@ import {
 } from "../../app-dao/{{module_name}}/{{name}}.sql";
 
 import type {{"{"}}{{cname}}{{"}"}} from "../../app-entity/{{module_name}}/{{name}}";
-import type {ITreeNode} from "../../youi/tree/Tree";
 
 /**
  * 主键查询
@@ -83,16 +82,9 @@ export async function findPrevNode(id:number,pid:number|string|undefined,num:num
  * 树查询
  * @param id
  */
-export async function find{{cname}}Tree():Promise<ITreeNode[]>{
+export async function find{{cname}}Tree():Promise<{{cname}}[]>{
     const {{name}}s = await appDataBase.select<{{cname}}[]>(SQL_TREE,[]);
-    return levelListToTree({{name}}s,(treeNode,{{name}})=>{
-        Object.assign(treeNode,{
-            loaded:true,
-            datas:{
-                num:{{name}}.num
-            }
-        })
-    },true);
+    return {{name}}s;
 }
 
 /**
@@ -150,13 +142,4 @@ export async function remove{{cname}}(id:number):Promise<number>{
     const result = await appDataBase.execute(SQL_REMOVE,[id]);
     return result.rowsAffected;
 }
-
-export function toTreeNode({{name}}:{{cname}}):ITreeNode{
-    return {
-        id:{{name}}.id+'',
-        text:{{name}}.text,
-        datas:{num:{{name}}.num}
-    }
-}
-
 

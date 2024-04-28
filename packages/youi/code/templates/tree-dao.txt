@@ -1,4 +1,4 @@
-import {buildDeleteSql, buildInsertSql, buildSelectSql, buildUpdateSql,buildTreeSql} from "../../util/dao.util";
+import {buildDeleteSql, buildInsertSql, buildSelectSql, buildUpdateSql,buildTreeSql} from "../dao.util";
 
 const TABLE_NAME = '{{table_name}}';
 

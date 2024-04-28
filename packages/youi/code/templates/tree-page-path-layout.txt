@@ -1,23 +1,45 @@
-<script>
-    import {getContext} from "svelte";
-    import {Form,FormItem,FieldInput} from "$lib/youi/index";
+<script lang="ts">
 
-    const {treeStore} = getContext('CONTEXT_{{cname}}');
+    import {afterNavigate} from "$app/navigation";
+    import {Toolbar,Button,Icon,saveIcon} from "$lib/youi";
+    import {isEqual} from "lodash";
+    import {treeStore} from "$lib/app-stores/{{module_name}}/{{name}}Store";
 
     export let data;
 
-    const handle_submit = () => {
-        treeStore.updateNode(data.{{name}});
+    /**
+     * 原始数据
+     */
+    let orgRecord = undefined;
+    /**
+     * 监听数据变化
+     */
+    $: dirty = !isEqual(orgRecord,data.record);
+    /**
+     * 保存数据
+     */
+    const doSave = async () => {
+        // 未变化直接返回
+        if(!dirty)return;
+        // 数据校验
+        await treeStore.update(data.record);
     }
+
+    afterNavigate(()=>{
+        orgRecord = {...data.record};
+    });
+
 </script>
 
-<Form class="padding" onSubmit={handle_submit}>
+<Toolbar>
+    <Button class="btn-ghost btn-xs" disabled={!dirty} title="保存" on:click={()=>doSave()}>
+        <Icon data={saveIcon}/>
+    </Button>
+</Toolbar>
+<div class="p-1 flex-1">
 {% for property in properties %}
-    <FormItem caption="{{property.caption}}" class="input-group">
-        <FieldInput bind:value={data.{{name}}.{{ property.name }}}/>
-    </FormItem>
-{% endfor %}
-
-</Form>
-<!-- dialog -->
-<slot/>
+    <label class="input input-sm input-bordered flex items-center gap-2 mb-2">
+        {{ property.caption }}：
+        <input type="text" class="grow" bind:value={data.record.{{ property.name }}} placeholder="请输入{{ property.caption }}"/>
+    </label>{% endfor %}
+</div>

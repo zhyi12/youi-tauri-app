@@ -1,25 +1,23 @@
-import type {LayoutLoad,LayoutLoadEvent} from './$types';
+import type { LayoutLoad } from './$types';
+import {findMenuPaths} from "$lib/app-page/page.menu";
 
-/**
- *
- * @param params
- */
-export const load: LayoutLoad = async ({params}:LayoutLoadEvent) => {
-    const pathMenuPaths = [{text:''}];
+export const load: LayoutLoad = async ({parent,params}) => {
+    const {menus } = await parent();
+    //修改为实际路径
+    const baseUri = '/xxx/xxx';
+    const baseMenuPaths = findMenuPaths(baseUri,menus);
 
-    const baseUri = `/census/report`;
-
-    let activeNodeId;
+    let activeNodeId = '';
     let expandedNodeIds:string[] = [];
+
     if(params.path){
-        const paths = params.path.split('/');
-        activeNodeId = paths.pop();
-        expandedNodeIds = [...paths];
+        expandedNodeIds = params.path.split('/');
+        activeNodeId = expandedNodeIds.pop();
     }
 
     return {
-        pathMenuPaths,
         baseUri,
+        baseMenuPaths,
         activeNodeId,
         expandedNodeIds
     }

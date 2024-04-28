@@ -33,6 +33,17 @@ pub struct EntityTemplate<'a> {
 }
 
 #[derive(Template)] // this will generate the code...
+#[template(path = "tree-entity.txt")] // using the template in this path, relative
+// to the templates dir in the crate root
+pub struct TreeEntityTemplate<'a> {
+    // the name of the struct can be anything
+    pub(crate) name: &'a str, //
+    pub(crate) cname: &'a str,// name首字母转大写
+    // in your template
+    pub(crate) properties:Vec<Property>
+}
+
+#[derive(Template)] // this will generate the code...
 #[template(path = "sql.txt")] // using the template in this path, relative
 // to the templates dir in the crate root
 pub struct SqlTemplate<'a> {

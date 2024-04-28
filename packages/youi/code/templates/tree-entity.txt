@@ -1,0 +1,7 @@
+import type {TreeObject} from "../entity";
+
+export interface {{ cname }} extends TreeObject{
+{% for property in properties %}
+    /* {{ property.caption }} */
+    {{ property.name }}:{% match property.data_type.as_str() %} {% when "int" %} number {% when "number" %} number {% else %} string {% endmatch %},{% endfor %}
+}
