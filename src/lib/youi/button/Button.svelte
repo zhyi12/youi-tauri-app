@@ -20,13 +20,15 @@
 
     export let title = '';
 
+    export let disabled = false;
+
     export let tooltipPosition = 'bottom';
 
-    $: classes = classnames('btn', className);
+    $: classes = classnames('btn', className,disabled);
 </script>
 
 <Tooltip {title} class={`tooltip-${tooltipPosition}`}>
-    <button class={classes} on:click>
+    <button {disabled} class={classes} on:click>
         <slot/>
     </button>
 </Tooltip>
