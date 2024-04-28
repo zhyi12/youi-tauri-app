@@ -1,5 +1,5 @@
 import {writable} from "svelte/store";
-import {findTreeNode, removeTreeNode} from "../youi";
+import {findPathNodes, findTreeNode, removeTreeNode} from "../youi";
 import type {TreeItem} from "../youi/index.d";
 import type {TreeStore} from "./store";
 import type {ITreeService} from "../app-services/service";
@@ -17,6 +17,7 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
      */
     const addChild = async (record:T) => {
         const node = await service.insert(record);
+        console.log(node)
         Object.assign(record,{id:node.id});
         //更新num
         return update(model=>{
@@ -45,6 +46,8 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
                 //持久化更新
                 service.updateNum(node.id,record.pid,node.datas.num).then(r=>r);
             }
+
+            model.activeId = node.id.toString();
             return model;
         });
     };
@@ -106,9 +109,13 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
          *
          * @param params
          */
-        fetch:async (params)=>{
+        fetch:async (params,activeId?:string,expandedIds?:string[])=>{
             const nodes:TreeItem[] = await service.fetch(params);
-            return set({nodes,expandedIds:[]})
+            if(!expandedIds)expandedIds = [];
+            if(!expandedIds.length && nodes.length){
+                expandedIds = [nodes[0].id];
+            }
+            return set({nodes,expandedIds,activeId})
         },
 
         addChild,
@@ -127,6 +134,18 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
                 if(node){
                     Object.assign(node,{text});
                 }
+                model.activeId = id.toString();
+                return model;
+            });
+        },
+        update:async(record:T)=>{
+            const node = await service.update(record);
+            return update(model=>{
+                const oldNode = findTreeNode(model.nodes,record.id.toString());
+                if(oldNode){
+                    Object.assign(oldNode,node);
+                }
+                model.activeId = node.id.toString();
                 return model;
             });
         },
@@ -190,10 +209,41 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
          * 删除节点
          * @param id
          */
-        removeNode:async (id:number)=>{
+        removeNode:async (id:number,afterRemove)=>{
             await service.remove(id);
             return update(model=>{
-                removeTreeNode(model.nodes,id.toString());
+                const pathNodes = findPathNodes(model.nodes,id.toString());
+                let levelNums;
+                if(pathNodes.length>1){
+                    const parent = pathNodes[pathNodes.length - 2];
+                    levelNums = parent.children.map(n=>({num:n.datas.num,id:n.id}));
+                }else{
+                    levelNums = model.nodes.map(n=>({num:n.datas.num,id:n.id}));
+                }
+
+                levelNums.sort();
+
+                const node = pathNodes.pop();
+
+                if(levelNums.length > 1){
+                    //
+                    let refId;
+                    const index = levelNums.map(l=>l.id).indexOf(node.id);
+                    if(index === levelNums.length-1){
+                        refId = levelNums[levelNums.length-2].id;
+                    }else{
+                        refId = levelNums[index+1].id;
+                    }
+                    pathNodes.push({id:refId});
+                }
+
+                const redirectPaths = pathNodes.map(n=>n.id);
+                if(afterRemove){
+                    afterRemove(node,redirectPaths);
+                }
+
+                model.activeId = redirectPaths[redirectPaths.length-1];
+
                 return model;
             });
         }

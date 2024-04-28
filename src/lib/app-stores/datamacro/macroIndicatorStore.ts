@@ -8,9 +8,10 @@ import {
     findPrevNode,
     findNextNode,
     insertMacroIndicator,
+    updateMacroIndicator,
     removeMacroIndicator,
     updateMacroIndicatorMove,
-    updateMacroIndicatorText
+    updateMacroIndicatorText,
 } from "../../app-services/datamacro/macroIndicatorServices";
 import {levelListToTree} from "../../app-services/service.util";
 
@@ -39,6 +40,11 @@ export const createStore = () => {
         async insert(macroIndicator):Promise<TreeItem>{
             const insertId = await insertMacroIndicator(macroIndicator);
             Object.assign(macroIndicator,{id:insertId});
+            return toTreeItem(macroIndicator);
+        },
+
+        async update(macroIndicator):Promise<TreeItem>{
+            await updateMacroIndicator(macroIndicator);
             return toTreeItem(macroIndicator);
         },
 
