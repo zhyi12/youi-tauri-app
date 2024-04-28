@@ -65,7 +65,11 @@
                 //多选
             }else{
                 //单选
-                selectedIds = [id];
+                if(!selectedIds.includes(id)){
+                    selectedIds = [id];
+                    const node = findTreeNode(children,id);
+                    dispatch('select',node);
+                }
             }
         },
         toggleNode:({id})=>{
