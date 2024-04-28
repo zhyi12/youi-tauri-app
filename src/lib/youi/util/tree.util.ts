@@ -43,3 +43,26 @@ export function removeTreeNode(children:TreeItem[],nodeId:string,parentNode?:Tre
     }
     return null;
 }
+
+/**
+ *
+ * @param children
+ * @param nodeId
+ * @returns {*[]}
+ */
+export function findPathNodes(children:TreeItem[],nodeId:string,parentPathNodes?:TreeItem[]){
+    parentPathNodes = parentPathNodes||[];
+    let pathNodes = [];
+    for(let i=0;i<children.length;i++){
+        const item = children[i];
+        if(item.id == nodeId){
+            return [...parentPathNodes,item];
+        }else if(item.children){
+            const itemAncestors = findPathNodes(item.children,nodeId,[...parentPathNodes,item]);
+            if(itemAncestors.length){
+                return itemAncestors;
+            }
+        }
+    }
+    return pathNodes;
+}
