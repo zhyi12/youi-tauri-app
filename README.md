@@ -1,7 +1,11 @@
 # 桌面应用
-    基于tauri构建的桌面应用。
+    基于tauri2.0构建的桌面应用。
 ## 一、UI
     基于 svelte kit/tailwindcss/daysiui 框架
+
+### 安装nodejs
+    
+### 框架配置
 <ul>
     <li>svelte.config.js</li>
     <li>postcss.config.cjs</li>
