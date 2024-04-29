@@ -19,13 +19,13 @@ export interface ITreeService<T extends TreeObject>{
      *
      * @param id
      */
-    findPrev:(id:number,pid:number,num:number)=>Promise<TreeItem>,
+    findPrev:(id:number,pid:number,num:number,groupId?:number|string)=>Promise<TreeItem>,
 
     /**
      *
      * @param id
      */
-    findNext:(id:number,pid:number,num:number)=>Promise<TreeItem>,
+    findNext:(id:number,pid:number,num:number,groupId?:number|string)=>Promise<TreeItem>,
     /**
      *
      * @param record
