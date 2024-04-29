@@ -2,6 +2,7 @@
 
 	import '../app.css';
 
+	import {setContext} from 'svelte';
 	import {writable} from "svelte/store";
 	import {afterNavigate} from "$app/navigation";
 	import {page} from "$app/stores";
@@ -16,12 +17,11 @@
 	 */
 	let navPaths = writable([]);
 
+	setContext('AppContext',{
+		navPaths
+	});
 
 	afterNavigate(({from})=>{
-		if(!!from){
-
-		}
-
 		if($page.data){
 			if($page.data.pathMenuPaths){
 				$navPaths = [].concat($page.data.pathMenuPaths);
