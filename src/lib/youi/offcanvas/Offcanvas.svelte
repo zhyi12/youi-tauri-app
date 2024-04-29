@@ -26,7 +26,7 @@
 
     export let contentClass = '';
 
-    $: classes = classnames(`drawer drawer-end z-[${zIndex}]`, className);
+    $: classes = classnames(`drawer drawer-end z-40 z-[${zIndex}]`, className);
 
 </script>
 
