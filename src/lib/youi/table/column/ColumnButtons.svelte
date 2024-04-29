@@ -22,7 +22,7 @@
 
 <div>
     {#each buttons as button}
-        <Button title={`${button.title||button.text}${record.caption}`} class="btn-sm btn-ghost" on:click={()=>doAction(button)}>
+        <Button title={`${button.title||button.text}${record.caption||record.text}`} class="btn-sm btn-ghost" on:click={()=>doAction(button)}>
             {button.text}
         </Button>
     {/each}

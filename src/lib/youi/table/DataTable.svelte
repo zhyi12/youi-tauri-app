@@ -108,7 +108,7 @@
 </script>
 
 <div class="p-2 overflow-auto">
-    <table class="table table-zebra table-pin-rows table-pin-cols">
+    <table class="table table-sm table-zebra table-pin-rows table-pin-cols">
         <thead>
         {#each $table.getHeaderGroups() as headerGroup}
             <tr>
