@@ -1,15 +1,17 @@
 <script lang="ts">
-    import {onMount} from "svelte";
+    import {onMount,setContext} from "svelte";
     import {goto} from "$app/navigation";
     import {Tree,TreeNodeEditor,Toolbar,Button,Icon,plusIcon,renameIcon,closeIcon,addChildIcon,findPathNodes} from "$lib/youi";
     import {treeStore} from "$lib/app-stores/datamacro/macroIndicatorStore";
     import {APP_MESSAGE} from "$lib/app-page/page.message";
+    import {writable} from "svelte/store";
 
     const TREE_BUTTONS = [
         {
             name:'rename', text:'重命名', icon:renameIcon,
-            action:(id,newName)=>{
-                treeStore.rename(id,newName).then(t=>t);
+            action:async (id,newName)=>{
+                await treeStore.rename(id,newName).then(t=>t);
+                editingNode.set({id,text:newName});
             }
         },{
             name:'addChild', text:'新增下级指标', icon:addChildIcon,
@@ -26,7 +28,12 @@
         }
     ];
 
+    const editingNode = writable({});
+    setContext('PageContext',{editingNode});
+
     export let data;
+
+    let expandedIds = [];
 
     /**
      *
@@ -56,10 +63,10 @@
     }
 
     const doRemoveMacroIndicator = async (id,text) => {
-        const passed = await APP_MESSAGE.confirm(`确认删除${text}！`);
+        const passed = await APP_MESSAGE.confirm(text,`确认删除指标？`);
         if(passed){
             await treeStore.removeNode(id,(node,redirectPaths)=>{
-                //goto(`${data.baseUri}/${redirectPaths.join('/')}`);
+                goto(`${data.baseUri}/${redirectPaths.join('/')}`);
             });
         }
     }
@@ -95,7 +102,8 @@
     }
 
     onMount(async ()=>{
-        await treeStore.fetch({},data.activeNodeId,data.expandedNodeIds);
+        expandedIds = [...data.expandedNodeIds];
+        await treeStore.fetch({},data.activeNodeId,expandedIds);
     })
 </script>
 
@@ -107,7 +115,7 @@
             </Button>
         </Toolbar>
         <Tree children={$treeStore.nodes}
-              expandedIds={$treeStore.expandedIds}
+              expandedIds={expandedIds}
               selectedIds = {[$treeStore.activeId]}
               on:move={handle_node_move}
               on:select={handle_node_select}
