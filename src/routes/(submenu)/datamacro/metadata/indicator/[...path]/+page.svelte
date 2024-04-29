@@ -1,12 +1,13 @@
 <script lang="ts">
     import {getContext} from "svelte";
     import {afterNavigate} from "$app/navigation";
-    import {Toolbar,Button,Icon,saveIcon,findTreeNode} from "$lib/youi";
+    import {Toolbar,Button,Icon,saveIcon} from "$lib/youi";
     import {isEqual} from "lodash";
     import {treeStore} from "$lib/app-stores/datamacro/macroIndicatorStore";
 
     export let data;
 
+    const {navPaths} = getContext("AppContext");
     const {editingNode} = getContext("PageContext");
 
     /**
@@ -27,6 +28,8 @@
     function afterTreeNodeChange() {
         record.text = $editingNode.text;
         orgRecord.text = record.text;
+        //变更导航栏文本
+        $navPaths[$navPaths.length-1].text = record.text;
     }
 
     /**
@@ -38,6 +41,8 @@
         // 数据校验
         await treeStore.update(record);
         orgRecord = {...record};
+        //变更导航栏文本
+        $navPaths[$navPaths.length-1].text = record.text;
     }
 
     afterNavigate(()=>{
