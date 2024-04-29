@@ -15,9 +15,8 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
      *
      * @param record
      */
-    const addChild = async (record:T) => {
+    const addChild = async (record:T,groupId?:number|string) => {
         const node = await service.insert(record);
-        console.log(node)
         Object.assign(record,{id:node.id});
         //更新num
         return update(model=>{
@@ -31,7 +30,6 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
                         maxNum = parent.children.reduce((a,v)=>Math.max(a,v.datas.num),1);
                     }
                     parent.children.push(node);
-                    model.expandedIds.push(parent.id);
                 }
             }else{
                 if(needUpdateNum){
@@ -55,8 +53,8 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
      *
      * @param refNode
      */
-    const calculatePrevNum = async(refNode:TreeItem)=>{
-        const prevNode = await service.findPrev(refNode.id,refNode.datas.pid,refNode.datas.num);
+    const calculatePrevNum = async(refNode:TreeItem,groupId?:number|string)=>{
+        const prevNode = await service.findPrev(refNode.id,refNode.datas.pid,refNode.datas.num,groupId);
         let num = refNode.datas.num;
         if(!prevNode){
             num = num - 0.005;
@@ -69,8 +67,8 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
      *
      * @param refNode
      */
-    const calculateNextNum =async (refNode:TreeItem) => {
-        const nextNode = await service.findNext(refNode.id,refNode.datas.pid,refNode.datas.num);
+    const calculateNextNum = async (refNode:TreeItem,groupId?:number|string) => {
+        const nextNode = await service.findNext(refNode.id,refNode.datas.pid,refNode.datas.num,groupId);
         let num = refNode.datas.num;
         if(!nextNode){
             num = num + 0.005;
@@ -84,19 +82,19 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
      * @param refId
      * @param record
      */
-    const insertBefore = async(refId:number,record:T)=>{
+    const insertBefore = async(refId:number,record:T,groupId?:number|string)=>{
         const refNode = await service.findNode(refId);
         if(refNode){
-            const num = await calculatePrevNum(refNode);
+            const num = await calculatePrevNum(refNode,groupId);
             Object.assign(record,{num,pid:refNode.datas.pid});
             await addChild(record);
         }
     };
 
-    const insertAfter = async(refId:number,record:T)=>{
+    const insertAfter = async(refId:number,record:T,groupId?:number|string)=>{
         const refNode = await service.findNode(refId);
         if(refNode){
-            const num = await calculateNextNum(refNode);
+            const num = await calculateNextNum(refNode,groupId);
             Object.assign(record,{num,pid:refNode.datas.pid});
             await addChild(record);
         }
@@ -112,7 +110,7 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
         fetch:async (params,activeId?:string,expandedIds?:string[])=>{
             const nodes:TreeItem[] = await service.fetch(params);
             if(!expandedIds)expandedIds = [];
-            if(!expandedIds.length && nodes.length){
+            if(!expandedIds.length && nodes.length.length===1){
                 expandedIds = [nodes[0].id];
             }
             return set({nodes,expandedIds,activeId})
@@ -217,8 +215,12 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
                 if(pathNodes.length>1){
                     const parent = pathNodes[pathNodes.length - 2];
                     levelNums = parent.children.map(n=>({num:n.datas.num,id:n.id}));
+                    //删除节点
+                    parent.children =  parent.children.filter(n=>n.id != id);
                 }else{
                     levelNums = model.nodes.map(n=>({num:n.datas.num,id:n.id}));
+                    //删除节点
+                    model.nodes = model.nodes.filter(n=>n.id != id);
                 }
 
                 levelNums.sort();
@@ -238,6 +240,7 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
                 }
 
                 const redirectPaths = pathNodes.map(n=>n.id);
+
                 if(afterRemove){
                     afterRemove(node,redirectPaths);
                 }
