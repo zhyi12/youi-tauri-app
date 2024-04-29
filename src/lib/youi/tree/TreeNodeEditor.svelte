@@ -11,7 +11,8 @@
 
     export let buttons = [];
 
-    let newName = text;
+    // 存储初始值
+    let orgText = text;
 
     let renaming = false;
     let more = false;
@@ -25,16 +26,16 @@
      *
      */
     const doRename = () => {
-        if(newName && text !== newName){
+        if(text && text !== orgText){
             renaming = false;
             if(renameButton && renameButton.action){
-                renameButton.action(id,newName);
+                renameButton.action(id,text);
             }
         }
     }
 
     const handle_rename = (event) => {
-        if(event.keyCode === 13 && newName){
+        if(event.keyCode === 13 && text){
             renaming = false;
             doRename();
         }
@@ -51,7 +52,7 @@
 </script>
 
 {#if renaming}
-    <input class="w-full" type="text" bind:value={newName}
+    <input class="w-full" type="text" bind:value={text}
            on:dblclick|stopPropagation
            on:mousedown|stopPropagation on:keydown={handle_rename}/>
     <Tooltip title="保存修改">
@@ -66,13 +67,13 @@
     </Tooltip>
 {:else}
     <div class="tooltip whitespace-nowrap" data-tip={text}>
-        <div class="overflow-hidden whitespace-normal h-6">{text}</div>
+        <div class="overflow-hidden h-6">{text}</div>
     </div>
     {#if hovered || selected}
         <div class="flex-1">
 
         </div>
-        <div class="self-end absolute right-2 bg-blue-50">
+        <div class="self-end absolute right-1 bg-blue-50 rounded-md">
             {#each showButtons as button}
                 <Tooltip title={button.title||button.text} class="tooltip-bottom">
                     <a class="p-1 hover:bg-gray-200 rounded-md" on:click|stopPropagation={()=>{applyButtonAction(button)}}>
@@ -84,12 +85,12 @@
             {#if moreButtons.length}
                 <div class="dropdown dropdown-end">
                     <Tooltip title="更多" class="tooltip-bottom">
-                        <div tabindex="0" role="button"
+                        <a tabindex="0" role="button" class="p-1 hover:bg-gray-200 rounded-md"
                              on:mousedown|stopPropagation
                              on:click|stopPropagation
                              on:dblclick|stopPropagation>
-                            <Icon class="w-4 h-4 pr-2" data={ellipsisHIcon}/>
-                        </div>
+                            <Icon class="w-4 h-4" data={ellipsisHIcon}/>
+                        </a>
                     </Tooltip>
                     <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-gray-50 rounded-box w-52">
                         {#each moreButtons as button}
