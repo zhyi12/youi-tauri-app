@@ -38,7 +38,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@codemirror/lang-javascript": "^6.0.0",
 		"@faker-js/faker": "^8.4.1",
+		"@lezer/rust": "^1.0.2",
 		"@tanstack/svelte-table": "^8.16.0",
 		"@tanstack/table-core": "^8.16.0",
 		"@tauri-apps/api": "^2.0.0-beta.4",
@@ -49,6 +51,7 @@
 		"@tauri-apps/plugin-log": "^2.0.0-beta.2",
 		"@tauri-apps/plugin-sql": "^2.0.0-beta.2",
 		"codemirror": "^6.0.1",
+		"konva": "^9.3.6",
 		"lodash": "^4.17.21"
 	}
 }
