@@ -9,8 +9,8 @@ thiserror.workspace = true
 serde_json.workspace=true
 serde = { workspace=true, features = ["derive"] }
 serde_repr.workspace=true
-youi-table = {version = "1.0.0",path="../table"}
-youi-flow = {version = "1.0.0",path="../flow"}
+youi-table = {version = "1.1.0",path="../table"}
+youi-flow = {version = "1.1.0",path="../flow"}
 grid = {workspace=true,features=["serde"]}
 itertools.workspace = true
 petgraph.workspace = true
@@ -22,4 +22,4 @@ regex.workspace = true
 rhai.workspace = true
 
 [dev-dependencies]
-youi-test={version="1.0.0",path="../test"}
+youi-test={version="1.1.0",path="../test"}

@@ -12,7 +12,7 @@ serde_json.workspace = true
 serde .workspace = true
 itertools.workspace = true
 
-youi-flow={version="1.0.0",path="../flow"}
+youi-flow={version="1.1.0",path="../flow"}
 
 [dev-dependencies]
-youi-test={version="1.0.0",path="../test"}
+youi-test={version="1.1.0",path="../test"}

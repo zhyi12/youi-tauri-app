@@ -10,5 +10,5 @@ serde = { workspace=true, features = ["derive"] }
 askama = "0.12.1"
 
 [dev-dependencies]
-youi-test={version="1.0.0",path="../test"}
+youi-test={version="1.1.0",path="../test"}
 regex.workspace = true

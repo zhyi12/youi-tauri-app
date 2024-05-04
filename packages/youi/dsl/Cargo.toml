@@ -12,12 +12,10 @@ itertools.workspace = true
 polars-core.workspace = true
 polars-lazy={workspace = true,features=["is_in"]}
 polars-io.workspace = true
-arrow2.workspace = true
 
 rhai = {workspace=true,features=["serde","internals"]}
 
-youi-dataframe={version="1.0.0",path="../dataframe",features=["sqlite_dataframe","search_dataframe","parquet_dataframe"]}
-youi-report={version="1.0.0",path="../report"}
+youi-dataframe={version="1.1.0",path="../dataframe",features=["sqlite_dataframe","search_dataframe","parquet_dataframe"]}
 
 [dev-dependencies]
-youi-test={version="1.0.0",path="../test"}
+youi-test={version="1.1.0",path="../test"}

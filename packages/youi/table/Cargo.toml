@@ -9,8 +9,8 @@ serde_json.workspace = true
 serde = { workspace=true, features = ["derive"] }
 rhai = {workspace=true,features=["sync","internals"]}
 words-count = "0.1"
-youi-calamine={version="1.0.0",path="../calamine"}
-youi-flow={version="1.0.0",path="../flow"}
+youi-calamine={version="1.1.0",path="../calamine"}
+youi-flow={version="1.1.0",path="../flow"}
 grid = {workspace=true,features=["serde"]}
 rayon.workspace = true
 regex.workspace = true
@@ -19,4 +19,4 @@ lazy_static.workspace = true
 hashbrown = {version="0.14.3",features=["rayon"]}
 
 [dev-dependencies]
-youi-test={version="1.0.0",path="../test"}
+youi-test={version="1.1.0",path="../test"}

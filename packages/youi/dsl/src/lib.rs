@@ -1,3 +1,4 @@
+
 extern crate rhai;
 extern crate polars_core;
 extern crate polars_lazy;
@@ -10,15 +11,12 @@ use itertools::Itertools;
 use log::debug;
 use polars_core::datatypes::AnyValue;
 use serde::{Serialize,Deserialize};
-use crate::error::DslError;
+pub use crate::error::DslError;
 use crate::param::transform_param;
 pub use crate::core::DslTransform;
 
-pub mod transform;
 mod dataframe;
 
-pub mod report;
-pub mod condition;
 mod param;
 mod util;
 mod error;
@@ -36,59 +34,6 @@ pub struct Param{
     data_type:String
 }
 
-
-///
-/// 特殊函数
-///
-enum SpecialFunc<'a>{
-    Add(&'a str),
-    Sub(&'a str),
-    Div(&'a str),
-    Mul(&'a str),
-    Eq(&'a str),
-    Gt(&'a str),
-    Gte(&'a str),
-    Lt(&'a str),
-    Lte(&'a str),
-    ///
-    /// 使用dsl表达式的filter
-    ///
-    FilterByExpression,
-    ///
-    /// 列计算
-    ///
-    Calculator,
-    ///
-    ///
-    ///
-    ColExpression,
-    ///
-    /// 执行审核公式
-    ///
-    ExecCheckFormula,
-    Unknown
-}
-
-impl <'a>  SpecialFunc<'a>  {
-    fn from(value:&str)->Self{
-        match value {
-            value if value == "+" => SpecialFunc::Add("add"),
-            value if value == "-" => SpecialFunc::Sub("sub"),
-            value if value == "*" => SpecialFunc::Mul("mul"),
-            value if value == "/" => SpecialFunc::Div("div"),
-            value if value == "==" => SpecialFunc::Eq("eq"),
-            value if value == ">" => SpecialFunc::Gt("gt"),
-            value if value == ">=" => SpecialFunc::Gte("gte"),
-            value if value == "<" => SpecialFunc::Lt("lt"),
-            value if value == "<=" => SpecialFunc::Lte("lte"),
-            value if value == "filter_by_expression"=>SpecialFunc::FilterByExpression,
-            value if value == "calculator"=>SpecialFunc::Calculator,
-            value if value == "col_expression"=>SpecialFunc::ColExpression,
-            value if value == "exec_check_formula"=>SpecialFunc::ExecCheckFormula,
-            _ => SpecialFunc::Unknown,
-        }
-    }
-}
 ///
 /// 通过dsl调用服务
 ///
@@ -124,7 +69,7 @@ pub fn df_execute(engine:&Engine,script:&str,params:&Vec<Param>)->Result<String,
     }
 
     //转换为可执行脚本
-    exec_script = DslTransform::from(script).transform().unwrap();
+    exec_script = DslTransform::from(exec_script.as_str()).transform().unwrap();
 
     debug!("exec_script:{}",exec_script);
 
