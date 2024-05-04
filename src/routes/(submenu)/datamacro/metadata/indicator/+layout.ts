@@ -1,6 +1,8 @@
 import type { LayoutLoad } from './$types';
 import {findMenuPaths} from "$lib/app-page/page.menu";
 
+export const prerender = false;
+
 export const load: LayoutLoad = async ({parent,params}) => {
     const {menus } = await parent();
     const baseUri = '/datamacro/metadata/indicator';
