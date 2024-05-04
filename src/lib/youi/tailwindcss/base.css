@@ -1,3 +1,4 @@
+/********************************* tree **********************************/
 .youi-tree .dropping{
     @apply bg-yellow-100 !important;
     cursor:move;
@@ -17,4 +18,8 @@
     border-bottom-color: rgb(162, 199, 247);
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
+}
+/********************************* toolbar **********************************/
+.youi-toolbar .btn{
+    @apply h-8 btn-xs
 }
