@@ -1,4 +1,3 @@
-#![feature(portable_simd)]
 
 use youi_dsl::{df_engine, df_execute};
 use youi_test::find_real_path;
