@@ -129,7 +129,7 @@ export const findAppMenus = async ():Promise<MenuInfo[]> => {
                 {id: "990600",name: "list",text: "DSL函数",href: "/settings/dsl"},
             ]},
         {id:'970000',name:'chat',text:'聊天',href: '/chat',icon:"chat"},
-        {id:'980000',name:'terminal',text:'终端',href: '/terminal/dsl',icon:"console"}
+        {id:'980000',name:'terminal',text:'终端',href: '/terminal',icon:"console"}
     ];
 
     return menus;
