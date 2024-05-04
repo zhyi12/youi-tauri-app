@@ -1,4 +1,3 @@
-#![feature(inline_const)]
 
 pub mod constants;
 mod query_model;

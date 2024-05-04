@@ -174,7 +174,6 @@ impl ReportModel {
             None=>None,
             Some(dataset)=>dataset.find_data_table_name(dataset_columns,dataset_name,column_name),
         }
-
     }
 
     ///
