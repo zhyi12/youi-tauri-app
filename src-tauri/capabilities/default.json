@@ -6,6 +6,7 @@
     "main"
   ],
   "permissions": [
+    "dsl:allow-execute",
     "path:default",
     "event:default",
     "window:default",
@@ -39,19 +40,27 @@
     "event:allow-unlisten",
     {
       "identifier": "fs:allow-exists",
-      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+      "allow": [{ "path": "$APPDATA/**" }]
     },
     {
       "identifier": "fs:allow-create",
-      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+      "allow": [{ "path": "$APPDATA/**" }]
     },
     {
       "identifier": "fs:allow-write-file",
-      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+      "allow": [{ "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-read-text-file",
+      "allow": [{ "path": "$APPDATA/**" }]
+    },
+    {
+      "identifier": "fs:allow-write-text-file",
+      "allow": [{ "path": "$APPDATA/**" }]
     },
     {
       "identifier": "fs:allow-mkdir",
-      "allow": [{ "path": "/Volumes/D/project/workspace-youi7/youi-tauri-app/src/routes/(submenu)/**" }, { "path": "$APPDATA/**" }]
+      "allow": [{ "path": "$APPDATA/**" }]
     }
   ]
 }
