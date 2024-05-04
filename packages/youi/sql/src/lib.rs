@@ -1,7 +1,4 @@
 
-#![feature(trace_macros)]
-
-
 extern crate core;
 
 use log::debug;
