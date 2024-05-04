@@ -31,7 +31,7 @@ pub fn gen_code(base_path:&str,model_path:&str,module_name:&str){
     gen_dao_code(base_path,module_name,&model.properties,name,cname,table_name);
     gen_services_code(base_path,module_name,&model.properties,name,cname,caption);
     gen_store_code(base_path,module_name,&model.properties,name,cname,caption);
-    gen_page_code(&format!("{}/routes/{}",base_path,"tmp"),module_name,&model.properties,name,cname,caption);
+    gen_page_code(&format!("{}/routes/{}/{}",base_path,"tmp",model.name),module_name,&model.properties,name,cname,caption);
 }
 
 ///

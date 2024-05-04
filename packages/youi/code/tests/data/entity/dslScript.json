@@ -1,0 +1,45 @@
+{
+  "name": "dslScript",
+  "cname": "DslScript",
+  "caption": "DSL脚本",
+  "tableName": "youi_dsl_script",
+  "properties": [
+    {
+      "name": "id",
+      "caption": "ID",
+      "dataType": "number"
+    },{
+      "name": "text",
+      "caption": "名称",
+      "dataType": "string"
+    },{
+      "name": "pid",
+      "caption": "父级ID",
+      "dataType": "number"
+    },{
+      "name": "num",
+      "caption": "顺序号",
+      "dataType": "number"
+    },{
+      "name": "group",
+      "caption": "分类",
+      "dataType": "string"
+    },{
+      "name": "create_time",
+      "caption": "创建时间",
+      "dataType": "number"
+    },{
+      "name": "update_time",
+      "caption": "更新时间",
+      "dataType": "number"
+    },{
+      "name": "creator",
+      "caption": "创建者",
+      "dataType": "text"
+    },{
+      "name": "modified_by",
+      "caption": "修改者",
+      "dataType": "text"
+    }
+  ]
+}

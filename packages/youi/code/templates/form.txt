@@ -1,41 +1,57 @@
 <script lang="ts">
+    import {Offcanvas,Toolbar,Button,Icon,saveIcon,helpIcon} from "$lib/youi";
+    import {{"{"}}{{name}}Store} from "$lib/app-stores/{{module_name}}/{{name}}Store";
 
-    import {Offcanvas,OffcanvasBody,Form,FormItem,FieldInput} from "$lib/youi/index";
+    export let isOpen;
 
-    import type {{"{"}}{{cname}}{{"}"}} from "$lib/app-entity/{{module_name}}/{{name}}";
+    export let title = '新增{{caption}}';
+
+    /** ------------  数据项属性  -------------*/
+{% for property in properties %}
+    export let {{property.name}};{% endfor %}
 
     /**
-     * 是否弹出
+     * 保存数据项
      */
-    export let isOpen = false;
-    /**
-     * 是否为新增
-     */
-    export let isAdding = false;
-    /**
-     * form数据
-     */
-    export let formRecord:{{cname}} = {};
-    /**
-     *
-     * @param record
-     */
-    export let onSubmit = async (record) => true;
+    const save{{cname}} = async () => {
+        let time = new Date().getTime();
+        let {{name}} = {
+        {% for property in properties %}
+            {{property.name}},{% endfor %}
+        };
+        if(id){
+            Object.assign({{name}},{id,create_time});
+            await {{name}}Store.update{{cname}}({{name}});
+        }else{
+            await {{name}}Store.add{{cname}}({{name}});
+        }
+
+        isOpen = false;
+        clear();
+    }
+
+    const clear = () => {
+    {% for property in properties %}
+        {{property.name}} = '';{% endfor %}
+    }
 
 </script>
 
-<Offcanvas bind:isOpen placement="end" width="600px"
-           toggle={()=>isOpen = !isOpen} header={(isAdding?'新增':'修改')+'{{caption}}'}
-           on:close={()=>{
-        isAdding = false;
-    }}>
-    <OffcanvasBody>
-        <Form class="padding" {onSubmit}>
-            {% for property in properties %}{% if !loop.first%}
-            <FormItem class="input-group" caption="{{property.caption}}">
-                <FieldInput notNull={true} property="{{property.name}}" bind:value={formRecord.{{property.name}}}/>
-            </FormItem>{% endif %}{% endfor %}
-        </Form>
-    </OffcanvasBody>
+<Offcanvas bind:isOpen contentClass="p-2">
+    <Toolbar>
+        <Button title="保存{{caption}}" class="btn-sm btn-ghost" on:click={()=>save{{cname}}()}>
+            <Icon data={saveIcon}/>
+        </Button>
+        <div class="navbar-end text-right w-full font-bold">
+            {title}
+            <Icon class="w-4 h-4 hover:cursor-pointer" data={helpIcon}/>
+        </div>
+    </Toolbar>
+    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6 pt-2">
+    {% for property in properties %}
+        <label class="col-span-3 input input-sm input-bordered flex items-center gap-2">
+            {{property.caption}}
+            <input type="text" class="grow form-control" placeholder="请输入{{property.caption}}" bind:value={{'{'}}{{property.name}}{{'}'}} />
+        </label>{% endfor %}
+    </div>
 </Offcanvas>
-

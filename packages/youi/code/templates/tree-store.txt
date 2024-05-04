@@ -12,7 +12,7 @@ import {
     remove{{cname}},
     update{{cname}}Move,
     update{{cname}}Text,
-} from "../../app-services/datamacro/{{name}}Services";
+} from "../../app-services/{{module_name}}/{{name}}Services";
 import {levelListToTree} from "../../app-services/service.util";
 
 export const createStore = () => {

@@ -1,123 +1,121 @@
 <script lang="ts">
+    import {onMount} from "svelte";
 
-    import throttle from "$lib/thirdpart/lodash/throttle";
-    import {confirm} from "$lib/tauri/dialog";
+    import {DataTable,ColumnButtons,Toolbar,Button,Icon,plusIcon,cellComponent} from "$lib/youi";
+    import {{"{"}}{{name}}Store} from "$lib/app-stores/{{module_name}}/{{name}}Store";
+    import {APP_MESSAGE} from "$lib/app-page/page.message";
+    import Editor from "./Editor.svelte";
 
-    import {DataTable,DataTableCol,Toolbar,Button,Icon,FormItem,FieldInput,plusIcon,pencilIcon,removeIcon} from "$lib/youi/index";
-
-    import {{"{"}}{{name}}Store as store} from "$lib/app-services/{{module_name}}/{{name}}Services";
-
-    import EditForm from "./EditForm.svelte";
-
+    import type {ColumnDef} from "@tanstack/table-core";
     import type {{"{"}}{{cname}}{{"}"}} from "$lib/app-entity/{{module_name}}/{{name}}";
 
     /**
-     * 每页记录数量
+     *
      */
-    export let pageSize = 15;
-    /**
-     * 当前页码
-     */
-    export let pageIndex = 1;
+    const NEW_RECORD:{{name}} = {
+        id:'',
+        caption:''
+    };
+
+    let pageSize = 10;
+    let pageIndex = 1;
+    let editorIsOpen = false;
+    let editorTitle = '';
+
+    let editing{{cname}} = {...NEW_RECORD};
+
+    let columns:ColumnDef<{{cname}}>[] = [
+        {
+            accessorKey: 'name',
+            header:'数据项名'
+        }, {
+            accessorKey: 'caption',
+            header:'中文描述'
+        },{
+            accessorKey: 'column_name',
+            header:'列名'
+        }, {
+            accessorKey: 'full_caption',
+            header:'中文全称'
+        },{
+            accessorKey:'operator',
+            header:'操作',
+            cell:info=>{
+                return cellComponent(ColumnButtons,{
+                    record:{...info.row.original},
+                    buttons:[
+                        {name:"modify", text:'修改', action:openModify},
+                        {name:"remove", text:'删除', action:doRemove{{name}}},
+                    ]
+                })
+            }
+        }
+    ];
 
     /**
-     * 当前选择行的id集合
+     * 回掉函数 - 数据表格分页事件
+     * @param detail
      */
-    let selectedRowIds = [];
-
-    /**
-     * 表单数据
-     */
-    let formRecord:{{cname}} = {};
-    let isEditing = false;
-    let isAdding = false;
-
-    /*
-     * 固定的查询属性
-     */
-    {% for property in properties %}{% if loop.index == 2 %}
-    let {{property.name}} = '';
-    {% endif %}{% endfor %}
-
-    /**
-     * 数据查询（throttle - 防抖处理）
-     */
-    const doQuery = throttle(() => {
-        store.findByPager({pageSize,pageIndex},{{"{"}} {% for property in properties %}{% if loop.index == 2 %}{{property.name}}{% endif %}{% endfor %}});
-    },50);
-
-    $: if({% for property in properties %}{% if loop.index == 2 %}{{property.name}}{% endif %}{% endfor %}){
-        pageIndex = 1;
+    const handle_pagination = async ({detail}) => {
+        await doQuery(detail.pageIndex);
     }
+
     /**
-     * 响应后台数据查询
+     * 打开{{caption}}新建窗口
      */
-    $: if(pageIndex || pageSize ||{{"{"}}{% for property in properties %}{% if loop.index == 2 %}{{property.name}}{% endif %}{% endfor %}}){
-        !doQuery.pending() && doQuery();
+    const openAdd{{cname}} = async () => {
+        editing{{cname}} = {...NEW_RECORD};
+        editorTitle = '新增{{caption}}';
+        editorIsOpen = true;
     }
+
+    /**
+     * 打开{{caption}}修改窗口
+     * @param {{name}}
+     */
+    const openModify = ({{name}}) => {
+        editing{{cname}} = {...{{name}}};
+        editorTitle = '修改{{caption}}';
+        editorIsOpen = true;
+    }
+
+    /**
+     * 删除数据项
+     * @param {{name}}
+     */
+    const doRemove{{name}} = async ({{name}}) => {
+        const passed = await APP_MESSAGE.confirm(`确认删除{{caption}}-${{"{"}}{{name}}.caption}?`);
+        if(passed){
+            {{name}}Store.remove{{cname}}({{name}}.id)
+        }
+    }
+
+    /**
+     * 查询数据
+     * @param queryPageIndex
+     */
+    const doQuery =  async (queryPageIndex) => {
+        pageIndex = queryPageIndex;
+        await {{name}}Store.findByPager({pageIndex:queryPageIndex,pageSize})
+    }
+
+    onMount(async ()=>{
+        await doQuery(pageIndex);
+    });
+
 </script>
 
-<div class="content flex-full">
-    <Toolbar>
-        <Button class="btn" on:click={()=>{
-            isAdding = true;
-            isEditing = true;
-            formRecord = {};
-         }}>
-            <Icon data={plusIcon}/>
-        </Button>
-    </Toolbar>
-    <DataTable class="flex-layout flex-1 padding" idKeys={['id']}
-               datas={$store.records} {selectedRowIds}
-               totalCount={$store.totalCount}
-               bind:pageSize bind:pageIndex>
-        <div class="field-layout">
-        {% for property in properties %}{% if loop.index == 2 %}
-            <FormItem class="input-group col-sm-4" caption="{{property.caption}}">
-                <FieldInput property="{{property.name}}" placeholder="{{property.caption}}" bind:value={{"{"}}{{property.name}}{{"}"}}/>
-            </FormItem>{% endif %}{% endfor %}
-        </div>
-        {% for property in properties %}{% if !loop.first%}
-        <DataTableCol width="10%" property="{{property.name}}" caption="{{property.caption}}"/>{% endif %}{% endfor %}
-        <DataTableCol width="5%" property="button" type="button" caption="操作"/>
-
-        <div slot="cell_button" let:row>
-            <Button class="btn-row" on:click={(e)=>{
-            isEditing = true;
-            isAdding = false;
-            formRecord = {
-                {% for property in properties %}
-                {{property.name}}:row.{{property.name}},{% endfor %}
-            };
-            selectedRowIds = [row.id];
-            e.stopPropagation();
-        }}>
-                <Icon data={pencilIcon}/>
-            </Button>
-
-            <Button class="btn-row" on:click={async (e)=>{
-                const confirmed = await confirm(`确认删除 - ${row.caption}?`, { title: '删除提示', type: 'warning' });
-                if(confirmed) {
-                   await store.remove{{cname}}(row.id);
-                }else{
-                    selectedRowIds = [row.id];
-                }
-                e.stopPropagation();
-            }}>
-                <Icon data={removeIcon}/>
-            </Button>
-        </div>
-    </DataTable>
-</div>
-<!-- 表单 -->
-<EditForm bind:formRecord bind:isOpen={isEditing} bind:isAdding
-          onSubmit={()=>{
-    if(isAdding){
-        store.add{{cname}}(formRecord);
-    }else{
-        store.update{{cname}}(formRecord);
-    }
-    isEditing = false;
-    isAdding = false;
-}}/>
-
+<Toolbar>
+    <Button title="新增{{caption}}" class="btn-sm btn-ghost" tooltipPosition="right" on:click={()=>openAdd{{cname}}()}>
+        <Icon data={plusIcon}/>
+    </Button>
+</Toolbar>
+<!-- -->
+<DataTable
+        {pageIndex} {pageSize}
+        on:pagination={handle_pagination}
+        records={${{name}}Store.records} {columns}
+           totalCount={${{name}}Store.totalCount}>
+</DataTable>
+<!-- -->
+<Editor title={editorTitle} {...editing{{cname}}} bind:isOpen={editorIsOpen}/>

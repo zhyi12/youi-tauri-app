@@ -1,0 +1,41 @@
+{
+  "name": "macroGroup",
+  "cname": "MacroGroup",
+  "caption": "宏观分组",
+  "tableName": "stats_macro_group",
+  "properties": [
+    {
+      "name": "id",
+      "caption": "分组ID",
+      "dataType": "int"
+    },{
+      "name": "text",
+      "caption": "名称",
+      "dataType": "string"
+    },{
+      "name": "group_type",
+      "caption": "分组类型",
+      "dataType": "string"
+    },{
+      "name": "desc",
+      "caption": "分组说明",
+      "dataType": "string"
+    },{
+      "name": "create_time",
+      "caption": "创建时间",
+      "dataType": "number"
+    },{
+      "name": "update_time",
+      "caption": "更新时间",
+      "dataType": "number"
+    },{
+      "name": "creator",
+      "caption": "创建者",
+      "dataType": "text"
+    },{
+      "name": "modified_by",
+      "caption": "修改者",
+      "dataType": "text"
+    }
+  ]
+}

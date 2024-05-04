@@ -14,6 +14,11 @@ pub fn gen_icon_code(){
 }
 
 #[test]
+pub fn gen_dsl_script_code(){
+    tree_code_gen("dslScript","base");
+}
+
+#[test]
 pub fn gen_meta_item_code(){
     code_gen("metaItem","dmp");
 }
@@ -21,6 +26,11 @@ pub fn gen_meta_item_code(){
 #[test]
 pub fn gen_macro_indicator_code(){
     tree_code_gen("macroIndicator","datamacro");
+}
+
+#[test]
+pub fn gen_macro_group_code(){
+    code_gen("macroGroup","datamacro");
 }
 
 #[test]
