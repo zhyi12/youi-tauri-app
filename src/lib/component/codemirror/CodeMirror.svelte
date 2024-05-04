@@ -9,10 +9,14 @@
     import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import { basicSetup } from "codemirror";
     import { EditorView, keymap, placeholder as placeholderExt } from "@codemirror/view";
-    import { EditorState, StateEffect, type Extension } from "@codemirror/state";
+    import { EditorState, StateEffect} from "@codemirror/state";
+
     import { indentWithTab } from "@codemirror/commands";
-    import { indentUnit, type LanguageSupport } from "@codemirror/language";
+    import { indentUnit} from "@codemirror/language";
     import { debounce } from "./util";
+
+    import type { Extension } from "@codemirror/state";
+    import type { LanguageSupport } from "@codemirror/language";
 
     let classes = "";
     export { classes as class };
