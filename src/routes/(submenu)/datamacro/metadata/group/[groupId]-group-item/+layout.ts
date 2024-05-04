@@ -2,6 +2,7 @@ import type { LayoutLoad } from './$types';
 import {findMenuPaths} from "$lib/app-page/page.menu";
 import {findMacroGroup} from "$lib/app-services/datamacro/macroGroupServices";
 
+export const prerender = false;
 // 缓存根据groupId获取的分组信息
 const cached = {};
 
