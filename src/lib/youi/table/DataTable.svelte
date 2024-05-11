@@ -107,7 +107,7 @@
 
 </script>
 
-<div class="p-2 overflow-auto">
+<div class="p-2 overflow-auto youi-data-table">
     <table class="table table-sm table-zebra table-pin-rows table-pin-cols">
         <thead>
         {#each $table.getHeaderGroups() as headerGroup}
