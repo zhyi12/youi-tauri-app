@@ -22,6 +22,8 @@
 
     export let droppable = true;
 
+    export let showSelect = false;
+
     export let acceptDropping = undefined;
 
     export let isDropping = false;
@@ -37,6 +39,9 @@
 
     // 节点渲染
     export let nodeRender:()=>any = undefined;
+
+    // 节点图标
+    export let icons = (_)=>undefined;
 
     /**
      * 当前定位的节点ID
@@ -60,13 +65,16 @@
         expandedNodeIds,
         selectedNodeIds,
         treeConfig,
+        icons,
         selectNode:({id})=>{
             if(multiple){
                 //多选
             }else{
                 //单选
                 if(!selectedIds.includes(id)){
-                    selectedIds = [id];
+                    if(showSelect){
+                        selectedIds = [id];
+                    }
                     const node = findTreeNode(children,id);
                     dispatch('select',node);
                 }

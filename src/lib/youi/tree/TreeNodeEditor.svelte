@@ -5,6 +5,8 @@
 
     export let text:string;
 
+    export let group:string = undefined;
+
     export let hovered = false;
 
     export let selected = false;
@@ -17,10 +19,17 @@
     let renaming = false;
     let more = false;
 
-    $:renameButton = buttons.filter(b=>b.name === 'rename')[0];
+    $:nodeButtons = buttons.filter(b=>{
+        if(group && b.groups && !b.groups.includes(group)){
+            return false;
+        }
+        return true
+    });
 
-    $:showButtons = buttons.length>3?[...buttons.slice(0,2)]:buttons;
-    $:moreButtons = buttons.length>3?buttons.slice(2):[];
+    $:renameButton = nodeButtons.filter(b=>b.name === 'rename')[0];
+
+    $:showButtons = nodeButtons.length>3?[...nodeButtons.slice(0,2)]:nodeButtons;
+    $:moreButtons = nodeButtons.length>3?nodeButtons.slice(2):[];
 
     /**
      *
@@ -45,7 +54,7 @@
         if(button.name === 'rename'){
             renaming = true;
         }else if(button.action){
-            button.action(id,text);
+            button.action(id,text,group);
         }
         more = false;
     }

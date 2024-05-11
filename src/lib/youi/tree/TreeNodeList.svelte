@@ -4,16 +4,19 @@
 
     import type {TreeItem} from "./Tree.d";
     import TreeText from "./TreeText.svelte";
+    import Icon from "../icon/Icon.svelte";
 
     const {selectedNodeIds,expandedNodeIds,
         hoverNodeId,
-        toggleNode,selectNode,treeConfig} = getContext('Tree');
+        toggleNode,selectNode,treeConfig,icons} = getContext('Tree');
 
     export let root = false;
 
     export let id = undefined;
     export let text = undefined;
     export let level = 1;
+    export let icon:string = undefined;
+    export let group:string = undefined;
 
     export let children:TreeItem[] = [];
 
@@ -52,6 +55,7 @@
                 id:child.id,
                 text:child.text,
                 icon:child.icon,
+                group:child.group,
                 href:child.href,
                 level:1,
                 datas:child.datas
@@ -82,8 +86,13 @@
                 </span>
             {/if}
 
+            {#if icon && icons}
+                {@const iconData = icons(icon)}
+                <div><Icon class="w-4 h-4 mr-0.5 -mt-0.5" data={iconData}/></div>
+            {/if}
+
             {#if $treeConfig.nodeRender}
-                {@const result = $treeConfig.nodeRender({id,text,hovered,selected})}
+                {@const result = $treeConfig.nodeRender({id,text,group,hovered,selected})}
                 {#if result.component && result.props}
                     <svelte:component this={result.component} {...result.props} />
                 {:else if typeof result === 'string' || typeof result === 'number'}
@@ -103,6 +112,7 @@
                             id:child.id,
                             text:child.text,
                             icon:child.icon,
+                            group:child.group,
                             href:child.href,
                             level:level+1,
                             datas:child.datas
