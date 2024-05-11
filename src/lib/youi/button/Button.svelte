@@ -24,7 +24,7 @@
 
     export let tooltipPosition = 'bottom';
 
-    $: classes = classnames('btn', className,disabled);
+    $: classes = classnames('youi-button btn', className,disabled?'disabled':'');
 </script>
 
 <Tooltip {title} class={`tooltip-${tooltipPosition}`}>

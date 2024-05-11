@@ -20,6 +20,19 @@
     border-bottom-right-radius: 0;
 }
 /********************************* toolbar **********************************/
-.youi-toolbar .btn{
-    @apply h-8 btn-xs
+.youi-toolbar{
+    @apply navbar bg-gray-50 min-h-8 mt-0.5 pt-1 pb-1 space-x-1;
 }
+
+.youi-toolbar .btn{
+    @apply h-8 btn-xs;
+}
+/********************************* button **********************************/
+.youi-button.btn.disabled{
+    @apply bg-transparent
+}
+/********************************* dataTable **********************************/
+.youi-data-table td{
+    @apply py-0.5
+}
+
