@@ -1,0 +1,29 @@
+export interface SurveyTable{
+
+    /* ID */
+    id: number ,
+    /* 编码 */
+    code: string ,
+    /* 年份 */
+    year: string ,
+    /* 名称 */
+    text: string ,
+    /* 报告期别 */
+    period_type: string ,
+    /* 调查对象类型 */
+    respondent_type: string ,
+    /* 调查范围 */
+    table_scope: string ,
+    /* 上报时间说明 */
+    submit_time_desc: string ,
+    /* 核对时间说明 */
+    check_time_desc: string ,
+    /* 创建时间 */
+    create_time: number ,
+    /* 更新时间 */
+    update_time: number ,
+    /* 创建者 */
+    creator: string ,
+    /* 修改者 */
+    modified_by: string ,
+}
