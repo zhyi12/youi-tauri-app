@@ -22,6 +22,7 @@
     }
 
     $:headerRows = parseHeaderRows(columns);
+    $:rows = records.length + headerRows;
 
     $:gridData = ({rowIndex,columnIndex})=>{
         if(rowIndex ===0){
@@ -33,7 +34,7 @@
                     fontStyle:'bold'
                 }
             }
-        }else if(rowIndex>0 && rowIndex<records.length){
+        }else if(rowIndex>0 && rowIndex<rows){
             if(columnIndex<columns.length){
                 let dataType = columns[columnIndex].dataType||'string';
                 let value = records[rowIndex-1][columns[columnIndex].header];
@@ -68,7 +69,7 @@
 
 <DataGrid class={className} data={gridData}
           columns={columns.length}
-          rows={records.length}
+          {rows}
           frozenRows={headerRows}
           {colWidth}
           contentWidth={1024} contentHeight={450}

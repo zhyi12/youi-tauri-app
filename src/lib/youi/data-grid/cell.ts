@@ -47,7 +47,10 @@ export const drawCell = (parent,cell,showGrid) => {
     if(!parent)return;
 
     const group = new Konva.Group({
-        x:cell.x, y:cell.y, width:cell.width, height:cell.height
+        x:cell.x, y:cell.y, width:cell.width, height:cell.height,
+        clipX:0,
+        //clipWidth:cell.width,
+        clipHeight:cell.height
     });
 
     const rect = {
@@ -60,7 +63,7 @@ export const drawCell = (parent,cell,showGrid) => {
 
     if(showGrid){
         Object.assign(rect,{
-            stroke: 'silver',
+            stroke: '#dddddd',
             strokeWidth: 1,
         })
     }
@@ -81,20 +84,21 @@ export const drawCell = (parent,cell,showGrid) => {
 function drawText(group:Konva.Group,cell) {
     if(!isNull(cell.text)){
         const fontSize = cell.fontSize||14;
-        const offset = Math.floor((cell.height - fontSize)/2)-1;
         //计算位置
         group.add(new Konva.Text({
             padding:2,
             fontSize,
             fontStyle:cell.fontStyle,
             align:cell.align,
+            verticalAlign:cell.verticalAlign||'middle',
+            lineHeight:cell.lineHeight||1.2,
             letterSpacing:cell.letterSpacing,
             x:1,
-            y:offset,
+            y:0,
             text:cell.text,
             width:cell.width,
             height:cell.height,
-            wrap:'none',
+            wrap:'auto',
             ellipsis:true
         }))
     }

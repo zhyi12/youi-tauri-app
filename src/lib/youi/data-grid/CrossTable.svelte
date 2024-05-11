@@ -21,6 +21,11 @@
      */
     export let slaveRows = 1;
 
+    /**
+     * 表脚行数
+     */
+    export let footerRows = 1;
+
     export let slaveFill = '#99ceff';
     /**
      * 合并单元格
@@ -34,6 +39,20 @@
      * 单元格
      */
     export let data = [];
+
+    export let showXScroll = true;
+
+    export let showYScroll = true;
+
+    export let scrollLeft = 0;
+
+    export let scrollTop = 0;
+
+    export let contentHeight = undefined;
+
+    export let selections = [];
+
+    export let tableHeight;
 
     // 计算列数
     $:columns = colModels.length;
@@ -58,7 +77,7 @@
             border.borderTop='black';
             border.borderBottom='black';
             border.borderRight='black';
-        }else if(rowIndex>=slaveRows && columnIndex<mainColumns){
+        }else if(rowIndex>=slaveRows && columnIndex<mainColumns && rowIndex<rows-footerRows){
             //主栏单元格
             fill = mainFill;
             align = 'left';
@@ -80,15 +99,19 @@
             if(cellData.corner){
                 border.borderLeft = slaveFill;
             }
-        }else{
+        }else if(rowIndex<rows-footerRows){
             //数据单元格
+            align = 'right';
         }
 
         if(rowIndex === 0){
             border.borderTopWidth = 3;
-        }else if(rowIndex === rows-1){
+        }else if(rowIndex === rows-1-footerRows){
             border.borderBottom = 'black';
             border.borderBottomWidth = 2;
+        }else if(rowIndex === rows-footerRows && footerRows>0){
+            border.borderTop = 'black';
+            border.borderTopWidth = 1;
         }
 
         return {
@@ -111,15 +134,17 @@
 
     $:classes = classnames('p-0',className);
 
-    const handle_col_resize = ({detail}) => {
-        const {columnIndex,value } = detail;
-        colModels[columnIndex] = colModels[columnIndex]||{};
-        Object.assign(colModels[columnIndex],{width:value});
-    }
+    // const handle_col_resize = ({detail}) => {
+    //     const {columnIndex,value } = detail;
+    //     colModels[columnIndex] = colModels[columnIndex]||{};
+    //     Object.assign(colModels[columnIndex],{width:value});
+    // }
 
 </script>
 
-<DataGrid class={classes} data={gridData}
+<DataGrid bind:tableHeight
+        class={classes} data={gridData}
+          {contentHeight}
           {colWidth}
           {columns}
           {rows}
@@ -128,4 +153,14 @@
           showGrid={editable}
           frozenRows = {slaveRows}
           frozenColumns = {mainColumns}
-          on:col-resize = {handle_col_resize}/>
+          {showXScroll}
+          {showYScroll}
+          {scrollLeft}
+          {scrollTop}
+          bind:selections
+          on:col-resize
+          on:selection-stop
+          on:edited
+          on:focus
+          on:table-height
+/>

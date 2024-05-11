@@ -8,17 +8,26 @@
     import type {ItemSizer,CellPosition,CellData,Area} from "./DataGrid.d";
     import {
         buildFrozenColumnCells,
-        buildFrozenRowCells, buildIntersectionCells,
+        buildFrozenRowCells,
+        buildIntersectionCells,
         buildShowCells,
         calculateColumnWidths,
         calculateRange,
-        calculateRowHeights, cellIdentifier, expandedAreaByMerge, findCellPosition, isEqualCells,
+        calculateRowHeights,
+        cellIdentifier,
+        expandedAreaByMerge,
+        findCellPosition,
+        getMergedCell,
+        isEqualCells,
+        isMergedCell,
         toBox,
         toMergeMap
     } from "./helper";
     import Selection from "./Selection.svelte";
+    import Editor from "../editor/Editor.svelte";
     import {drawCells} from "./cell";
     import classnames from "../util/classname";
+
 
     // 默认行高度
     const DEFAULT_ROW_HEIGHT = 30;
@@ -68,7 +77,20 @@
      */
     export let editable = false;
 
+    /**
+     * 是否显示背景网格
+     */
     export let showGrid = true;
+
+    /**
+     * 是否显示横向滚动条
+     */
+    export let showXScroll = true;
+
+    /**
+     * 是否显示垂直滚动条
+     */
+    export let showYScroll = true;
     /**
      * 合并区域
      */
@@ -109,12 +131,22 @@
      */
     export let selections: Area[] = [];
 
+    /**
+     * 双向绑定，自定计算，export供外部只读使用
+     * @readonly
+     */
+    export let tableHeight = 0;
+
     //行、列定位数据
     $: tableRowRange = calculateRange(Infinity,0,rows,rowHeight);
     $: tableColRange = calculateRange(Infinity,0,columns,colWidth);
 
     $: tableWidth = columns>0?calculateColumnWidths(Infinity,0,columns,colWidth).reduce((t,v)=>t+v):0;
-    $: tableHeight = rows>0?calculateRowHeights(Infinity,0,rows,rowHeight).reduce((t,v)=>t+v):0;
+
+    $:if(rows>0){
+        tableHeight = calculateRowHeights(Infinity,0,rows,rowHeight).reduce((t,v)=>t+v)
+    }
+
     //当前显示的行、列定位数据
     $: rowRange = calculateRange(contentHeight,scrollTop,rows,rowHeight);
     $: colRange = calculateRange(contentWidth,scrollLeft,columns,colWidth);
@@ -131,6 +163,7 @@
     $:if(showCells){
         drawCells(layer,showCells,frozenRowCells,frozenColumnCells,frozenIntersectionCells,scrollTop,scrollLeft,showGrid)
     }
+
     /**
      * 冻结单元格
      */
@@ -153,13 +186,13 @@
     let time = 0;
     let stage =undefined;
     let layer = undefined;
-    let intersectionLayer = undefined;
 
     let activePosition;
     let startPosition;
     let overPosition;
     let containerOffsetX = 0;
     let containerOffsetY = 0;
+    let selectionHelper = undefined;
 
     let rowResizeElement:HTMLElement = undefined;
     let rowResizing = false;
@@ -177,6 +210,8 @@
     let columnResizingX:number = undefined;
     let columnResizingWidth:number = undefined;
     let columnX = 0;
+
+    let editingCell:any = undefined;
 
     /**
      *
@@ -220,29 +255,93 @@
         }
     }
 
+    /**
+     *
+     * @param data
+     */
+    const stopSelection = (data) => {
+        dispatch('selection-stop', {...data,scrollLeft});
+        // const {offsetX,offsetY} = data.evt;
+        // if(editable){
+        //     // pasteHelperLeft = offsetX - scrollLeft;
+        //     // pasteHelperTop = offsetY - scrollTop;
+        //     // pasteHelper.focus();
+        // }
+    }
+
     const normalMouseUp = (event) => {
         let {offsetX,offsetY,shiftKey} = event;
-        activePosition = calculateCellPosition(offsetX,offsetY,mergedCellMap);
 
-        if(activePosition){
-            if(shiftKey && selections[0]){
-                selections = [expandedAreaByMerge({
-                    startRow:Math.min(selections[0].startRow,activePosition.rowIndex),
-                    endRow:Math.max(selections[0].endRow,activePosition.rowIndex),
-                    startCol:Math.min(selections[0].startCol,activePosition.columnIndex),
-                    endCol:Math.max(selections[0].endCol,activePosition.columnIndex),
-                },mergedCellMap)];
-            }else{
-                selections = [expandedAreaByMerge({
-                    startRow:activePosition.rowIndex,
-                    endRow:activePosition.rowIndex,
-                    startCol:rowSelection?0:activePosition.columnIndex,
-                    endCol:rowSelection?(columns-1):activePosition.columnIndex
-                },mergedCellMap)];
+        const mouseUpPosition = calculateCellPosition(offsetX,offsetY,mergedCellMap);
+
+        if(mouseUpPosition){
+            if(!isEqualCells(activePosition,mouseUpPosition)){
+                if(editingCell){
+                    acceptEdited();
+                }
+                activePosition = mouseUpPosition;
+
+                if(shiftKey && selections[0]){
+                    selections = [expandedAreaByMerge({
+                        startRow:Math.min(selections[0].startRow,activePosition.rowIndex),
+                        endRow:Math.max(selections[0].endRow,activePosition.rowIndex),
+                        startCol:Math.min(selections[0].startCol,activePosition.columnIndex),
+                        endCol:Math.max(selections[0].endCol,activePosition.columnIndex),
+                    },mergedCellMap)];
+                }else{
+                    selectedActivePosition();
+                }
+                stopSelection({selections,evt:event,stopPosition:{...activePosition}});
+            }else {
+                // 进入编辑状态
+                activeEditing(activePosition)
             }
-            //stopSelection({selections,evt:detail.evt,stopPosition:{...activePosition}});
         }
     }
+
+    /**
+     * 设置当前所在单元格选区
+     */
+    const selectedActivePosition = ()=>{
+        selections = [expandedAreaByMerge({
+            startRow:activePosition.rowIndex,
+            endRow:activePosition.rowIndex,
+            startCol:rowSelection?0:activePosition.columnIndex,
+            endCol:rowSelection?(columns-1):activePosition.columnIndex
+        },mergedCellMap)];
+    }
+
+    /**
+     * 启动编辑
+     * @param rowIndex
+     * @param columnIndex
+     */
+    const activeEditing = ({rowIndex,columnIndex},force?) => {
+        if(!editable)return;
+        let cell = findCellByPosition({rowIndex,columnIndex});
+
+        if(!cell)return;
+
+        if(editingCell && !isEqualCells(cell,editingCell)){
+            acceptEdited();
+        }
+        editingCell = {...cell};
+    }
+
+    /**
+     * 接收编辑
+     */
+    const acceptEdited = ()=>{
+        if(editingCell){
+            const editCell = findCellByPosition(editingCell);
+            if(editCell && editCell.text != editingCell.text){
+                //接收单元格编辑
+                dispatch('edited',{...editingCell});
+            }
+            editingCell = undefined;
+        }
+    }
+
 
     const handle_x_scroll = (e) => {
         scrollLeft = e.target.scrollLeft;
@@ -281,7 +380,7 @@
     }
 
     const mouseStart = (event) => {
-        let {offsetX,offsetY,pageX,pageY,target,layerX,layerY} = event;
+        let {offsetX,offsetY,pageX,pageY,target} = event;
         //记录容器的offset量
         containerOffsetX = pageX - offsetX;
         containerOffsetY = pageY - offsetY;
@@ -289,7 +388,7 @@
 
         if(target === columnResizeElement){
             columnResizing = true;
-            containerOffsetX = columnResizeElement.parentElement.parentElement.offsetLeft;
+            //合并单元格处理
             startPosition = {...overCell};
         }
     }
@@ -299,7 +398,7 @@
             const delta = event.pageY - rowResizingStartPageY;
             rowY = rowResizingY + delta;
         } else if(columnResizing && columnResizeElement){
-            columnX =  event.pageX - containerOffsetX + scrollLeft;
+            columnX =  event.pageX - parentOffset.left + scrollLeft;
         }else if(!rowResizing && startPosition) {
             // 拖动 - 选择区域
             const offsetX = event.pageX - containerOffsetX;
@@ -317,22 +416,27 @@
                     startCol: Math.min(startPosition.columnIndex, overPosition.columnIndex),
                     endCol: Math.max(startPosition.columnIndex, overPosition.columnIndex)
                 }, mergedCellMap)];
-
             }
         }
     }
 
     const mouseStop = (event) => {
-
         if(rowResizing){
             dispatch('row-resize',{rowIndex:rowResizingIndex,value:rowY - rowResizingY + rowResizingHeight});
             rowResizing = false;
         }else if(columnResizing){
             const value = columnX - columnResizingX + columnResizingWidth;
+            //合并单元格上的处理
             if(value>5){
                 dispatch('col-resize',{columnIndex:columnResizingIndex,value});
             }
             columnResizing = false;
+        }else if(startPosition && overPosition){
+            stopSelection({selections,evt:event,stopPosition:{...overPosition}});
+            activeEditing({
+                rowIndex:Math.min(startPosition.rowIndex,overPosition.rowIndex),
+                columnIndex:Math.min(startPosition.columnIndex,overPosition.columnIndex)}
+            )
         }
         startPosition = undefined;
         rowResizing = false;
@@ -371,6 +475,8 @@
         return cellPosition;
     }
 
+    let parentOffset = {left:0,top:0};
+
     onMount(()=>{
         stage = new Konva.Stage({
             container
@@ -378,11 +484,25 @@
         handle_resize({});
         layer = new Konva.Layer();
         stage.add(layer);
+
+        //计算offsetParentLeft
+        let op = panel.offsetParent;
+        while(op){
+            parentOffset = {
+                left:parentOffset.left + op.offsetLeft,
+                top:parentOffset.top+op.offsetTop
+            }
+            op = op.offsetParent;
+        }
     })
 
     const handle_resize = (e) => {
         throttle(()=>{
-            contentHeight = panel.parentNode.offsetHeight;
+            if(showYScroll){
+                contentHeight = panel.parentNode.offsetHeight;
+            }else if(contentHeight === 0){
+                contentHeight = tableHeight;
+            }
             contentWidth = panel.parentNode.offsetWidth;
             if(stage){
                 stage.size({
@@ -393,19 +513,99 @@
         },100, { 'trailing': false })();
     }
 
+    const handle_editor_close = ({detail}) => {
+        if(editingCell){
+            const editCell = findCellByPosition(editingCell);
+            if(editCell && detail.value != editCell.text){
+                dispatch('edited',{...editingCell});
+            }
+        }
+    }
+
+    const handle_selection_focus = ({detail}) => {
+        dispatch('focus',{...detail,contentWidth,tableWidth});
+    }
+
+    const handle_keydown = (event) => {
+        if(!activePosition)return;
+
+        let gotoPosition = undefined;
+        let merged;
+        switch (event.keyCode) {
+            case 37:
+                //左
+                gotoPosition = {...activePosition,columnIndex:Math.max(activePosition.columnIndex-1,0)};
+                merged = getMergedCell(mergedCellMap,gotoPosition);
+                if(merged){
+                    gotoPosition = {rowIndex:merged.startRow,columnIndex:merged.startCol};
+                }
+                break;
+            case 38:
+                //上
+                gotoPosition = {...activePosition,rowIndex:Math.max(activePosition.rowIndex-1,0)};
+                merged = getMergedCell(mergedCellMap,gotoPosition);
+                if(merged){
+                    gotoPosition = {rowIndex:merged.startRow,columnIndex:merged.startCol};
+                }
+                break;
+            case 39:
+                //右
+                merged = getMergedCell(mergedCellMap,activePosition);
+                let columnDelta = 1;
+                if(merged){
+                    columnDelta = merged.endCol - merged.startCol + 1;
+                }
+                const nextColumnIndex = activePosition.columnIndex+columnDelta;
+                console.log(nextColumnIndex,columns)
+                if(nextColumnIndex<columns){
+                    gotoPosition = {...activePosition,columnIndex:nextColumnIndex}
+                }
+                break;
+            case 40:
+                //下
+                merged = getMergedCell(mergedCellMap,activePosition);
+                let rowDelta = 1;
+                if(merged){
+                    rowDelta = merged.endRow - merged.startRow + 1;
+                }
+                gotoPosition = {...activePosition,rowIndex:Math.max(activePosition.rowIndex+rowDelta,0)}
+                break;
+            default:
+        }
+
+        if(gotoPosition){
+            event.preventDefault();
+            activePosition = gotoPosition;
+            selectedActivePosition();
+            // 等待聚焦选区后
+            tick().then(_=>{
+                stopSelection({selections,evt:event,stopPosition:{...activePosition},
+                    scrollViewer:{x:selectionBoxes[0].x,contentWidth,tableWidth}
+                });
+                // 等待重定位后再进入编辑状态
+                tick().then(_=>{
+                    activeEditing(activePosition,true);
+                });
+            });
+        }
+    }
 </script>
 
 <svelte:window on:resize={handle_resize}/>
 
-<div class={classes} bind:this={panel} use:mouse={{mouseStart,mouseDrag,mouseStop,normalMouseUp}}>
+<div data-table-height={tableHeight}
+        on:click
+     on:keydown={handle_keydown}
+     style:height={`${contentHeight}px`}
+        class={classes} bind:this={panel} use:mouse={{mouseStart,mouseDrag,mouseStop,normalMouseUp}}>
     <div bind:this={container}
          on:mousemove={handle_mouse_move}
          class:cursor-col-resize={columnResizing}
     >
     </div>
     <!--  选区  -->
-    {#if showSelection && Array.isArray(selectionBoxes)}
-        <Selection {selectionBoxes}>
+    {#if showSelection && Array.isArray(selectionBoxes) && selectionBoxes.length}
+        <Selection {selectionBoxes} on:focus={handle_selection_focus}>
 
         </Selection>
     {/if}
@@ -415,14 +615,14 @@
          class:resizing={rowResizing}
          class:active={rowResizingIndex!==undefined && rowResizingIndex>-1}>
     </div>
-    <!-- 列宽带度调整-->
+    <!-- 列宽带度调整 -->
     <div style:left={`${columnX-scrollLeft}px`} bind:this={columnResizeElement}
          class="absolute h-full cursor-col-resize w-1 top-0 -ml-1"
          class:bg-blue-50={columnResizing}
          class:active={columnResizingIndex!==undefined && columnResizingIndex>-1}></div>
 
     <!--  横向滚动条  -->
-    {#if tableWidth>contentWidth}
+    {#if showXScroll && tableWidth>contentWidth}
         <div class="scrollbar overflow-x-auto absolute w-full h-4 left-0" tabIndex={-1}
              on:mousedown|stopPropagation
              on:scroll={handle_x_scroll}
@@ -433,13 +633,20 @@
     {/if}
 
     <!--  纵向滚动条  -->
-    {#if tableHeight>contentHeight}
+    {#if showYScroll && tableHeight>contentHeight}
         <div class="scrollbar overflow-y-auto absolute w-4 h-full top-0" tabIndex={-1}
              on:scroll={handle_y_scroll}
              on:mousedown|stopPropagation
              style:left={`${Math.min(tableWidth,contentWidth-16)}px`}>
             <div style:height={`${(tableHeight+20)}px`}></div>
         </div>
+    {/if}
+
+    <!--  单元格编辑  -->
+    {#if editable && editingCell}
+        <Editor on:close={handle_editor_close}
+                bind:value={editingCell.text} x={editingCell.x-scrollLeft} y={editingCell.y-scrollTop}
+                width={editingCell.width} height={editingCell.height}/>
     {/if}
 </div>
 

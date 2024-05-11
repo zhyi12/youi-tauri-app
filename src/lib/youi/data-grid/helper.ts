@@ -149,7 +149,6 @@ export function buildShowCells(
             }
         }
     }
-
     return cells;
 }
 
@@ -171,6 +170,9 @@ export function buildFrozenRowCells(frozenRows:number,tableRowRange:Range,colRan
 
     const rowSizes:Position[] = tableRowRange.sizes.filter(size=>size.index<=frozenRows);
     const {start:startColumn,stop:stopColumn,sizes:colSizes} = colRange;
+
+    const outerMergedKeys = [];
+
     for(let rowIndex=0;rowIndex<frozenRows;rowIndex++){
         const rowSize = rowSizes[rowIndex];
         if(!rowSize)break;
@@ -179,10 +181,10 @@ export function buildFrozenRowCells(frozenRows:number,tableRowRange:Range,colRan
             if(!colSize)break;
             const cellData = data({rowIndex,columnIndex})||{text:''};
             Object.assign(cellData,{rowIndex,columnIndex});
+
             if(isMergedCell(mergedCellMap,{rowIndex,columnIndex})){
                 const merged = mergedCellMap.get(cellIdentifier(rowIndex,columnIndex));
                 if(merged && merged.startRow == rowIndex && merged.startCol == columnIndex){
-                    //
                     cells.push({
                         ...cellData,
                         x:colSize.offset,
@@ -190,6 +192,19 @@ export function buildFrozenRowCells(frozenRows:number,tableRowRange:Range,colRan
                         width:calculateMergeSize(merged.startCol  - startColumn,merged.endCol - startColumn,colSizes),
                         height:calculateMergeSize(merged.startRow,merged.endRow,rowSizes),
                     });
+                }else if(merged && startColumn>merged.startCol && merged.endCol<=stopColumn){
+                    // 补充不在显示区域内的合并单元格
+                    const outerKey = cellIdentifier(merged.startRow,merged.startCol);
+                    if(outerMergedKeys.indexOf(outerKey) === -1){
+                        outerMergedKeys.push(outerKey);
+                        cells.push({
+                            ...cellData,
+                            x:colSizes[0].offset,
+                            y:rowSize.offset,
+                            width:calculateMergeSize(merged.startCol  - startColumn,merged.endCol - startColumn,colSizes),
+                            height:calculateMergeSize(merged.startRow,merged.endRow,rowSizes),
+                        });
+                    }
                 }
             }else if(rowSize && colSize){
                 cells.push({
@@ -396,6 +411,14 @@ export const getBoundedCells = (area: Area | null | undefined) => {
 export const cellIdentifier = (rowIndex: number, columnIndex: number): string =>
     `${rowIndex},${columnIndex}`;
 
+/**
+ *
+ * @param mergedCellMap
+ * @param cell
+ */
+export const getMergedCell = (mergedCellMap,cell:CellPosition) => {
+    return mergedCellMap.get(cellIdentifier(cell.rowIndex,cell.columnIndex));
+}
 /**
  * 根据合并框扩展选区
  */
