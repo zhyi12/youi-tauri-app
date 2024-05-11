@@ -1,0 +1,9 @@
+export { default as surveyProjectIcon} from './surveyProject';
+export { default as surveyPlanIcon} from './surveyPlan';
+export { default as surveyTableIcon} from './surveyTable';
+export { default as surveyIndicatorIcon} from './surveyIndicator';
+export { default as surveyGroupIcon} from './surveyGroup';
+export { default as surveyCategoryIcon} from './surveyCategory';
+export { default as timeFrameIcon} from './timeFrame';
+export { default as surveyTaskIcon} from './surveyTask';
+export { default as metadataIcon} from './metadata';

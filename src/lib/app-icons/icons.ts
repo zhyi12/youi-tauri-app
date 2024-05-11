@@ -6,9 +6,14 @@ import {
     gearIcon,
     cubeIcon,
     chatIcon,
-    consoleIcon
+    consoleIcon,
+    reportIcon, treeIcon
 } from './index'
 import {hddOIcon, homeIcon, listIcon} from "../youi";
+import {
+    surveyProjectIcon, surveyPlanIcon, surveyTableIcon,surveyTaskIcon,
+    surveyIndicatorIcon, surveyGroupIcon, surveyCategoryIcon, timeFrameIcon
+} from "./metadata/index";
 
 export const APP_ICONS = {
     'address':addressIcon,
@@ -21,5 +26,16 @@ export const APP_ICONS = {
     'list':listIcon,
     'metadata':metadataIcon,
     'res':hddOIcon,
+    'report':reportIcon,
     "settings":gearIcon,
+    "surveyProject":surveyProjectIcon,
+    "surveyPlan":surveyPlanIcon,
+    "surveyTask":surveyTaskIcon,
+    "surveyTable":surveyTableIcon,
+    "surveyIndicator":surveyIndicatorIcon,
+    "surveyGroup":surveyGroupIcon,
+    "surveyCategory":surveyCategoryIcon,
+    "timeFrame":timeFrameIcon,
+    "tree":treeIcon,
+
 }
