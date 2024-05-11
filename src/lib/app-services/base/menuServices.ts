@@ -47,11 +47,11 @@ export const findAppMenus = async ():Promise<MenuInfo[]> => {
                 {id: "040200",name: "metaDb",icon:"database",text: "数据资源",href: "/metadata/meta/db"},
                 {id: "040300",name: "metaTable",text: "数据库表",icon:'report',href: "/metadata/meta/table"},
                 {id: "040400",name: "surveyPlan",icon:"surveyPlan",text: "统计制度",href: "/metadata/stats",children: [
-                        {id: "040401",name: "surveyTable",icon:'report',text: "调查表",href: "/metadata/stats-object/table"},
+                        {id: "040401",name: "surveyTable",icon:'surveyTable',text: "调查表",href: "/metadata/stats-object/table"},
                         {id: "040402",name: "surveyIndicator",icon:'surveyIndicator',text: "指标",href: "/metadata/stats-object/indicator"},
                         {id: "040403",name: "surveyGroup",icon:'surveyGroup',text: "分组",href: "/metadata/stats-object/group"},
                         {id: "040404",name: "surveyCatalog",icon:'surveyCategory',text: "目录",href: "/metadata/stats-object/catalog"},
-                        {id: "040405",name: "surveyAttr",icon:'surveyAttr',text: "时间框架",href: "/metadata/stats-object/attr"},
+                        {id: "040405",name: "surveyAttr",icon:'timeFrame',text: "时间框架",href: "/metadata/stats-object/attr"},
                         {id: "040406",name: "quest",icon:'flat',text: "题目",href: "/metadata/stats-object/quest"},
                         {id: "040407",name: "governance",icon:'metadata',text: "数据治理",href: "/metadata/stats-object/governance"},
                     ]},

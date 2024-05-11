@@ -125,8 +125,10 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
          * 重命名
          * @param id
          */
-        rename:async(id:number,text:string)=>{
-            await service.rename(id,text);
+        rename:async(id:number,text:string,onlyShow?:boolean)=>{
+            if(!onlyShow){
+                await service.rename(id,text);
+            }
             return update(model=>{
                 const node = findTreeNode(model.nodes,id.toString());
                 if(node){
