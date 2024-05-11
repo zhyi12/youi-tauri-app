@@ -5,6 +5,7 @@ export {default as ColumnButtons} from './table/column/ColumnButtons.svelte';
 export {default as DataGrid} from './data-grid/DataGrid.svelte';
 export {default as VDataTable} from './data-grid/VDataTable.svelte';
 export {default as CrossTable} from './data-grid/CrossTable.svelte';
+export {default as Grid} from './data-grid/Grid.svelte';
 export {default as TabContent} from './tabs/TabContent.svelte';
 export {default as TabPane} from './tabs/TabPane.svelte';
 export {default as Tree} from './tree/Tree.svelte';
@@ -35,5 +36,8 @@ export { default as removeIcon } from './icons/remove';
 export { default as renameIcon } from './icons/rename';
 
 export * from './util/tree.util';
+export * from './util/classname';
+export * from './util/selection.util';
 export * from './mouse/mouse';
 export * from './mouse/dropping';
+
