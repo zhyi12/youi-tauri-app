@@ -1,6 +1,6 @@
 import type { PageLoad } from './$types';
 import {findDslScriptContent} from "$lib/app-services/base/dslScriptServices";
-import {findConfig} from "../../../lib/app-services/base/configServices";
+import {findConfig} from "$lib/app-services/base/configServices";
 
 export const load: PageLoad = async ({params,parent}) => {
 

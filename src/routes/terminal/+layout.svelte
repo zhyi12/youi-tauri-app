@@ -126,5 +126,5 @@
 </div>
 
 <div class="flex-1 border-l flex flex-col">
-    <slot/>
+    <slot></slot>
 </div>

@@ -35,6 +35,10 @@
         <input type="text" class="grow" bind:value={config.dataDir} placeholder="本地数据文件路径"/>
     </label>
     <label class="input input-sm input-bordered flex items-center gap-2 mb-2">
+        <span class="w-28 text-right">本地数据库：</span>
+        <input readonly type="text" class="grow" bind:value={config.dbConnect} placeholder="本地数据库"/>
+    </label>
+    <label class="input input-sm input-bordered flex items-center gap-2 mb-2">
         <span class="w-28 text-right">所属区划：</span>
         <input type="text" class="grow" bind:value={config.ownerAreaId} placeholder="请配置所属区划"/>
     </label>

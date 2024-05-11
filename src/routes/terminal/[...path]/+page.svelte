@@ -4,6 +4,7 @@
     import {Toolbar,Button,Icon,saveIcon,VDataTable,Dropdown,DropdownToggle,DropdownMenu,DropdownItem} from "$lib/youi";
     import CodeMirror from "$lib/component/codemirror/CodeMirror.svelte";
     import {updateDslScriptContent} from "$lib/app-services/base/dslScriptServices";
+    import {configStore} from "$lib/app-stores/base/configStore";
     import {dsl,dslHover} from "$lib/component/codemirror/dsl";
     import {execute} from "$lib/tauri/dsl";
     import {playCircleOIcon} from "$lib/app-icons";
@@ -40,7 +41,11 @@
         const result = await execute(dslContent,[{
             name:'dataDir',
             dataType:'string',
-            value:data.dataDir
+            value:$configStore.dataDir
+        },{
+            name:'dbConnect',
+            dataType: 'string',
+            value:$configStore.dbConnect,
         }]);
 
         time = new Date().getTime() - start;
@@ -74,8 +79,8 @@
         <Icon data={saveIcon}/>
     </Button>
 
-    <Button  disabled={!dslContent} title="执行" on:click={()=>doExecute()}>
-        <Icon data={playCircleOIcon}/>
+    <Button disabled={!dslContent} title="执行" on:click={()=>doExecute()}>
+        <Icon class="text-green-700"  data={playCircleOIcon}/>
     </Button>
 
     <div class="flex-1">

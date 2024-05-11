@@ -28,14 +28,18 @@
         nodebounce: false
     };
 
+    $:if(name && value){
+        content = svgToData(name,value);
+    }
+
     /**
      * 编辑器内容变化
      * @param detail
      */
     const handle_change = ({detail}) => {
-        if(name && detail){
-            content = svgToData(name,detail);
-        }
+        // if(name && detail){
+        //     content = svgToData(name,detail);
+        // }
     }
 
     /**
@@ -95,4 +99,9 @@
             <Icon {scale} data={content}/>
         {/each}
     </div>
+    {#if name && value}
+    <div>
+        <CodeMirror value={`import type {IconData} from '$lib/youi/Icon.svelte';\nconst ${name}: Record<string, IconData> = ${JSON.stringify(content)};\nexport default ${name};`} class="editor" readonly/>
+    </div>
+    {/if}
 </Offcanvas>

@@ -2,14 +2,14 @@
 
 	import '../app.css';
 
-	import {setContext} from 'svelte';
+	import {onMount, setContext} from 'svelte';
 	import {writable} from "svelte/store";
 	import {afterNavigate} from "$app/navigation";
 	import {page} from "$app/stores";
 	import Header from "$lib/app-page/Header.svelte";
 	import LeftMenu from "$lib/app-page/LeftMenu.svelte";
-	import {parseMenuPaths} from "../lib/app-page/page.menu";
-
+	import {parseMenuPaths} from "$lib/app-page/page.menu";
+	import {configStore} from "$lib/app-stores/base/configStore";
 	export let data;
 
 	/**
@@ -17,11 +17,23 @@
 	 */
 	let navPaths = writable([]);
 
+	/**
+	 * 可后退
+	 */
+	let canBack = writable(false);
+	/**
+	 * 可前进
+	 */
+	let canForward = writable(false);
+
 	setContext('AppContext',{
-		navPaths
+		navPaths,
+		canBack,
+		canForward,
 	});
 
 	afterNavigate(({from})=>{
+		$canBack = !!from && !!from.url;
 		if($page.data){
 			if($page.data.pathMenuPaths){
 				$navPaths = [].concat($page.data.pathMenuPaths);
@@ -32,6 +44,10 @@
 				}
 			}
 		}
+	});
+
+	onMount(()=>{
+		configStore.fetch();
 	});
 
 </script>
