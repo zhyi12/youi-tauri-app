@@ -31,7 +31,7 @@ pub fn grid(){
 
     // 六边形面积
     let hex_square = 1000000.;
-    to_grid(&areas,hex_square,&find_real_path("geo","hexagon.csv"));
+    to_grid(&areas,hex_square,&find_real_path("geo","hexagon"));
 
     // let cells = areas.into_par_iter()
     //     .map(|area|area.to_grid(metre_size))
