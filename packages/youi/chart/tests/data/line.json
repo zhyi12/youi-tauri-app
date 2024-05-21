@@ -1,0 +1,17 @@
+{
+
+  "xAxis": { "type": "category" },
+  "yAxis": {},
+  "series": [
+    {
+      "type": "line"
+    },{
+      "type": "line"
+    },{
+      "type": "line"
+    }
+  ],
+  "dataset": [
+
+  ]
+}
