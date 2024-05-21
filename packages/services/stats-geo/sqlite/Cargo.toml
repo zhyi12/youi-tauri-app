@@ -1,0 +1,15 @@
+[package]
+name = "services-stats-geo-sqlite"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+log.workspace = true
+serde_json.workspace = true
+serde = { workspace=true, features = ["derive"] }
+sqlx = { workspace = true, features = ["sqlite","runtime-tokio-rustls"]}
+services-stats-geo={version="1.1.0",path="../geo"}
+async-trait.workspace = true
+
+[dev-dependencies]
+youi-test.workspace = true

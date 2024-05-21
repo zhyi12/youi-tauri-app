@@ -1,0 +1,33 @@
+[package]
+name = "services-stats-geo-impl"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+log.workspace = true
+serde_json.workspace = true
+serde = { workspace=true, features = ["derive"] }
+sqlx.workspace = true
+thiserror.workspace = true
+async-trait.workspace = true
+youi-geo.workspace = true
+
+services-stats-geo={version="1.1.0",path="../geo"}
+services-stats-geo-sqlite={version="1.1.0",path="../sqlite",optional = true}
+
+[features]
+sqlite = ["services-stats-geo-sqlite"]
+
+[dev-dependencies]
+youi-test.workspace=true
+tokio = {workspace = true,features=["macros",
+    "net",
+    "rt",
+    "rt-multi-thread",
+    "time",]}
+
+[[test]]
+name="sqlite_area_geo_service"
+path="tests/area_geo_service.rs"
+required-features=["sqlite"]
+
