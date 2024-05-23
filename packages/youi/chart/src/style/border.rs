@@ -1,25 +1,27 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
+
+use crate::style::line::ZRLineType;
+use crate::style::ZRColor;
 
 ///
-///
+/// 边框
 ///
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Animation {
+pub struct Border{
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation: Option<bool>,
+    border_color:Option<ZRColor>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_threshold: Option<usize>,
+    border_width:Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_duration: Option<usize>,
+    border_type:Option<ZRLineType>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_easing: Option<String>,
+    border_cap:Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_delay: Option<usize>,
+    border_join:Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_duration_update: Option<usize>,
+    border_dash_offset:Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_easing_update: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    animation_delay_update: Option<usize>,
+    border_miter_limit:Option<f32>,
 }
+

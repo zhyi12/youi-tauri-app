@@ -11,7 +11,7 @@ thiserror.workspace = true
 serde_json.workspace = true
 serde .workspace = true
 itertools.workspace = true
-
+void = "1.0.2"
 polars-core.workspace = true
 polars-io = {workspace = true,features=["json"]}
 

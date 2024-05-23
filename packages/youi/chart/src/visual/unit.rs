@@ -1,25 +1,28 @@
 use serde::{Serialize, Deserialize};
+use crate::style::Decal;
 
-///
-///
-///
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
-pub struct Animation {
+pub struct VisualUnit{
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation: Option<bool>,
+    symbol: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_threshold: Option<usize>,
+    symbol_size: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_duration: Option<usize>,
+    color: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_easing: Option<String>,
+    color_alpha: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_delay: Option<usize>,
+    opacity: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_duration_update: Option<usize>,
+    color_lightness: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_easing_update: Option<String>,
+    color_saturation: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    animation_delay_update: Option<usize>,
+    color_hue: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    decal: Option<Decal>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    lift_z: Option<f32>,
+    
 }

@@ -7,17 +7,20 @@ mod line;
 mod bar;
 mod pie;
 mod radar;
+mod stack;
 
 use serde::{Serialize,Deserialize};
 use bar::BarSeries;
 use line::LineSeries;
 use pie::PieSeries;
-use crate::style::ItemStyle;
+use crate::data::OrdinalData;
+use crate::series::radar::RadarSeries;
+use crate::style::Label;
 use crate::tooltip::Tooltip;
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
 #[serde(tag = "type")]
+#[allow(non_camel_case_types)]
 pub enum Series{
     ///
     ///
@@ -30,7 +33,12 @@ pub enum Series{
     ///
     ///
     ///
-    pie(PieSeries)
+    pie(PieSeries),
+
+    ///
+    ///
+    ///
+    radar(RadarSeries),
 }
 
 
@@ -53,8 +61,12 @@ pub struct SeriesInfo{
     silent:Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     tooltip:Option<Tooltip>,
+    ///
+    ///
+    ///
     #[serde(skip_serializing_if = "Option::is_none")]
-    item_style:Option<ItemStyle>
+    data:Option<OrdinalData>,
+
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -64,7 +76,6 @@ pub struct XyAxisSeriesInfo{
     x_axis_index:Option<usize>,
     #[serde(skip_serializing_if = "Option::is_none")]
     y_axis_index:Option<usize>,
-
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -85,4 +96,36 @@ pub struct SeriesDatasetInfo{
     ///
     #[serde(skip_serializing_if = "Option::is_none")]
     dataset_index:Option<usize>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SeriesLabel{
+    ///
+    ///
+    ///
+    formatter:Option<String>,
+
+    #[serde(flatten)]
+    label:Label,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct LineEndLabel{
+    #[serde(flatten)]
+    label:SeriesLabel,
+
+    value_animation:Option<bool>,
+}
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum SeriesIndex{
+    All(String),
+
+    Index(f32),
+
+    Indexed(Vec<f32>)
+
 }

@@ -1,10 +1,13 @@
 
 use serde::{Deserialize, Serialize};
+use crate::OrdinalRawValue;
+
 ///
 ///
 ///
 #[derive(Clone, Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[serde(untagged)]
 pub enum Gap{
 
     ///
@@ -15,6 +18,6 @@ pub enum Gap{
     ///
     /// 非类目轴，包括时间，数值，对数轴，boundaryGap是一个两个值的数组，分别表示数据最小值和最大值的延伸范围，可以直接设置数值或者相对的百分比，在设置 min 和 max 后无效。
     ///
-    Value(String,String)
+    Value(OrdinalRawValue,OrdinalRawValue)
 
 }

@@ -1,5 +1,5 @@
 use polars_core::df;
-use youi_chart::ChartOption;
+use youi_chart::{ChartOption};
 use youi_test::read_from_json;
 
 #[test]
@@ -16,4 +16,55 @@ pub fn line(){
     option.add_dataset(&mut df);
 
     println!("{}",serde_json::to_string(&option).unwrap());
+}
+
+#[test]
+pub fn radar(){
+    read_option("radar.json");
+}
+
+#[test]
+pub fn line_simple(){
+    read_option("line-simple.json");
+}
+
+#[test]
+pub fn line_smooth(){
+    read_option("line-smooth.json");
+}
+
+#[test]
+pub fn area_basic(){
+    read_option("area-basic.json");
+}
+
+#[test]
+pub fn line_stack(){
+    read_option("line-stack.json");
+}
+
+#[test]
+pub fn area_stack(){
+    read_option("area-stack.json");
+}
+
+#[test]
+pub fn area_stack_gradient(){
+    read_option("area-stack-gradient.json");
+}
+
+#[test]
+pub fn area_pieces(){
+    read_option("area-pieces.json");
+}
+
+#[test]
+pub fn bump_chart(){
+    read_option("bump-chart.json");
+}
+
+fn read_option(path:&str)->ChartOption{
+    let option = read_from_json::<ChartOption>("chart",path);
+    println!("{}",serde_json::to_string(&option).unwrap());
+    option
 }

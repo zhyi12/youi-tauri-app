@@ -2,7 +2,6 @@ use std::collections::HashMap;
 use polars_core::prelude::DataFrame;
 use polars_io::{json::{JsonWriter,JsonFormat}, SerWriter};
 use serde::{Serialize, Deserialize};
-use serde_json::Value;
 
 pub type RowData = HashMap<String,serde_json::Value>;
 
