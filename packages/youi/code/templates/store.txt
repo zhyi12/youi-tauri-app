@@ -1,7 +1,6 @@
 import {writable} from "svelte/store";
 
-import {SQL_SELECT} from "../../app-dao/{{module_name}}/{{name}}.sql";
-import {insert{{cname}},update{{cname}},remove{{cname}},findByPager} from "../../app-services/{{module_name}}/{{name}}Services";
+import {insert{{cname}},update{{cname}},remove{{cname}},find{{cname}}ByPager} from "../../app-services/{{module_name}}/{{name}}Services";
 
 import type {{"{"}}{{cname}}{{"}"}} from "../../app-entity/{{module_name}}/{{name}}";
 import type {Pager} from "../../app-dao/dao";
@@ -18,7 +17,7 @@ export const createStore = () => {
          * 获取数据
          */
         findByPager: async (pager:Pager,{{name}}?:{{cname}}) => {
-             const result = await findByPager(pager,{{name}});
+             const result = await find{{cname}}ByPager(pager,{{name}});
              return set(result);
         },
         /**
