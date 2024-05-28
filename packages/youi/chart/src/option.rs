@@ -79,12 +79,17 @@ impl ChartOption {
     ///
     /// 添加dataFrame数据集
     ///
-    pub fn add_dataset(&mut self,df:&mut DataFrame){
-        let dataset = Dataset::from(df);
-        if self.dataset.is_none(){
-            self.dataset = Some(vec![]);
+    pub fn add_df(&mut self,df:&mut DataFrame){
+        match self.dataset.as_mut() {
+            None => self.dataset = Some(vec![Dataset::from(df)]),
+            Some(dataset) => {
+                if dataset.is_empty(){
+                    self.dataset = Some(vec![Dataset::from(df)]);
+                }else{
+                    dataset.get_mut(0).unwrap().set_source_by_df(df);
+                }
+            }
         }
-        self.dataset.as_mut().unwrap().push(dataset);
     }
 }
 

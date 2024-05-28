@@ -1,4 +1,4 @@
-mod model;
+mod option;
 mod title;
 mod legend;
 mod style;
@@ -14,6 +14,13 @@ mod grid;
 mod layout;
 mod axis;
 mod visual;
+mod transform;
+mod ml;
+mod model;
+mod query;
 
-pub use model::ChartOption;
+pub use option::ChartOption;
 pub use data::OrdinalRawValue;
+
+pub use model::Chart;
+pub use query::ChartQuery;

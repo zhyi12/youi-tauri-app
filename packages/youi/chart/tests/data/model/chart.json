@@ -1,0 +1,17 @@
+{
+
+  "groupName": "area_id",
+
+  "measureItems": [{
+    "itemType": "Measure",
+    "id": "Indicator1",
+    "tableName": "table",
+    "columnName": "inc",
+    "aggregate": "sum"
+  }],
+
+  "option": {
+    "series": []
+  }
+
+}

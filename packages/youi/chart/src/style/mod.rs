@@ -14,7 +14,6 @@ mod decal;
 pub use truncate::Truncate;
 pub use text::{TextStyle,Label,Text};
 pub use line::LineStyle;
-pub use gap::Gap;
 pub use item::ItemStyle;
 pub use shadow::Shadow;
 pub use color::ZRColor;

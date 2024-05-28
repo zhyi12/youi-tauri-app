@@ -3,14 +3,14 @@
 //!
 //!
 mod axis;
-mod gap;
+// mod gap;
 mod data;
 
 use std::marker::PhantomData;
 use serde::{Deserialize, Deserializer};
 use serde::de::{MapAccess, SeqAccess, Visitor};
 
-pub use gap::gap_deserialize;
+// pub use gap::gap_deserialize;
 
 ///
 /// json的序列或者结构体反序列化为集合属性

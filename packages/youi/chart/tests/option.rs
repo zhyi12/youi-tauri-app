@@ -13,7 +13,7 @@ pub fn line(){
              "2017" => &[93.7, 55.1, 82.5,39.1]
     ).unwrap();
 
-    option.add_dataset(&mut df);
+    option.add_df(&mut df);
 
     println!("{}",serde_json::to_string(&option).unwrap());
 }
@@ -61,6 +61,11 @@ pub fn area_pieces(){
 #[test]
 pub fn bump_chart(){
     read_option("bump-chart.json");
+}
+
+#[test]
+pub fn data_transform_filter(){
+    read_option("data-transform-filter.json");
 }
 
 fn read_option(path:&str)->ChartOption{
