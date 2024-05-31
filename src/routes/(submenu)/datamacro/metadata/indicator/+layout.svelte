@@ -116,7 +116,7 @@
         </Toolbar>
         <Tree children={$treeStore.nodes}
               expandedIds={expandedIds}
-              selectedIds = {[$treeStore.activeId]}
+              selectedIds = {[data.activeNodeId]}
               on:move={handle_node_move}
               on:select={handle_node_select}
               {acceptDropping}
