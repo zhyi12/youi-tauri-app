@@ -67,7 +67,7 @@
         <TreeText {selected} {level}
                   on:mouseenter={()=>{ $hoverNodeId = id }}
                   on:mouseleave={()=>{ $hoverNodeId = undefined }}
-                  on:click={selectNode({id})}
+                  on:click={()=>selectNode({id})}
                   on:dblclick={handle_dblclick}>
             {#if expandable}
                 <span class="tree-node-toggle" on:click={(e)=>{
@@ -87,7 +87,7 @@
             {/if}
 
             {#if icon && icons}
-                {@const iconData = icons(icon)}
+                {@const iconData = icons(icon,expanded)}
                 <div><Icon class="w-4 h-4 mr-0.5 -mt-0.5" data={iconData}/></div>
             {/if}
 

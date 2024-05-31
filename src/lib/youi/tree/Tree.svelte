@@ -86,6 +86,11 @@
             }else{
                 expandedIds = [...expandedIds,id];
             }
+        },
+
+        dblClick:(node)=>{
+            // 叶子节点的双击事件
+            dispatch('dblclick',node);
         }
     });
     //

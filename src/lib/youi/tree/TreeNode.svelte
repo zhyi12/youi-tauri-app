@@ -4,7 +4,7 @@
     import {getContext} from "svelte";
     import Icon from "../icon/Icon.svelte";
 
-    const {treeConfig,hoverNodeId,selectNode,selectedNodeIds,icons} = getContext('Tree');
+    const {treeConfig,hoverNodeId,selectNode,dblClick,selectedNodeIds,icons} = getContext('Tree');
 
     export let id = '';
     export let text = '';
@@ -23,7 +23,8 @@
     <TreeText {level} {selected}
               on:mouseenter={()=>{ $hoverNodeId = id }}
               on:mouseleave={()=>{ $hoverNodeId = undefined }}
-              on:click={selectNode({id})}>
+              on:dblclick={()=>dblClick({id})}
+              on:click={()=>selectNode({id})}>
         {#if icon && icons}
             {@const iconData = icons(icon)}
             <div><Icon class="w-4 h-4 mr-0.5 -mt-0.5" data={iconData}/></div>
