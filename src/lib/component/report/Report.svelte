@@ -124,7 +124,7 @@
                     {:else if widget.name === 'CrossTable'}
                         <div class="flex-1 overflow-hidden">
                             <CrossTableWidget
-                                    {contentHeight} bind:tableHeight
+                                     bind:tableHeight
                                     {scrollTop}
                                     {scrollLeft} {editable} showYScroll={false}
                                     on:col-resize={e=>dispatch('col-resize',{...e.detail,widgetId:widget.id})}

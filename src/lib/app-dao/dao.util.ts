@@ -17,8 +17,8 @@ export const buildInsertSql = (tableName:string,properties:string[]) =>
  * @param tableName
  * @param properties
  */
-export const buildUpdateSql = (tableName:string,properties:string[]) =>
-    `update ${tableName} set ${properties.map((prop,idx)=>prop+'= $'+(idx+2)).join()} where id = $1`;
+export const buildUpdateSql = (tableName:string,properties:string[],idProp?:string) =>
+    `update ${tableName} set ${properties.map((prop,idx)=>prop+'= $'+(idx+2)).join()} where ${idProp||'id'} = $1`;
 /**
  *
  * @param tableName

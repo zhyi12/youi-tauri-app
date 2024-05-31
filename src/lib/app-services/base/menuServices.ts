@@ -12,9 +12,7 @@ export const findAppMenus = async ():Promise<MenuInfo[]> => {
     const menus:MenuInfo[] = [
         {id:'020000',name:'geo',text:'地理信息',href:"/geo",
             children:[
-                {id:'020100',icon:'area',name:'area',text:'区划维护',href:"/geo/area",children: [
-                        {id:'020201',icon:'boundary',name:'boundary',text:'边界管理',href:"/geo/geojson"}
-                    ]},
+                {id:'020100',icon:'area',name:'area',text:'行政区划',href:"/geo/area"},
                 {id:'020300',name:'address',icon:'address',text:'地址库',href:"/geo/address",children: [
                         {id:'020301',name:'address',icon:'upload',text:'地址导入',href:"/geo/address/imp"},
                         {id:'020302',name:'search',icon:'query',text:'地址检索',href:"/geo/address/search"},
@@ -64,7 +62,6 @@ export const findAppMenus = async ():Promise<MenuInfo[]> => {
                     {id:"050102",name:"impSt",icon:"upload",text:"一套表导入",href:'/dataproc/stats/imp/ST'},
                 ]
             },
-
             {id:"050200",name:"planData",text:"数据加工",href:'',icon:"table",children: [
                 {id:"050201",name:"dataQuality",icon:"quality",text:"质量检查",href:'/dataproc/stats/quality'},
                 {id:"050202",name:"label",icon:"tag",text:"数据标签",href:'/dataproc/stats/label'},
@@ -72,15 +69,11 @@ export const findAppMenus = async ():Promise<MenuInfo[]> => {
                 {id:"050204",name:"planDataQuery",icon:"query",text:"自助查询",href:'/dataproc/stats/query'},
                 {id:"050205",name:"planDataCube",icon:"cube",text:"自助汇总",href:'/dataproc/stats/report'},
                 {id:"050206",name:"planDataReport",icon:"report",text:"固定汇总",href:'/dataproc/stats/fixed-report'},
-                {id:"050207",name:"graphic",icon:"chart",text:"数据地图",href:'/dataproc/stats/graphic'},
                 {id:"050208",name:"publication",icon:"report",text:"产品编制",href:'/dataproc/stats/publication'},
                 {id:"050209",name:"publicationDoc",icon:"report",text:"出版物",href:'/dataproc/stats/publication-doc'}]
-            }, {id:"050300",name:"projectData",text:"数据分析",href:'',icon:"table",children: [
-                {id:"050301",name:"mappingMetaItem",icon:"mapping",text:"标准对照",href:'/dataproc/stats-analysis/mapping'},
-                {id:"050302",name:"dataFusion",icon:"fusion",text:"数据融合",href:'/dataproc/stats-analysis/fusion'},
-                {id:"050303",name:"indicatorQuery",icon:"query",text:"指标查询",href:'/dataproc/stats-analysis/indicator-query'},
-                {id:"050304",name:"mappingMetaItem",icon:"query",text:"自助查询",href:'/dataproc/stats-analysis/query'},
-                {id:"050305",name:"mappingMetaItem",icon:"cube",text:"自助汇总",href:'/dataproc/stats-analysis/report'},
+            }, {id:"050300",name:"projectData",text:"数据融合",href:'',icon:"table",children: [
+                {id:"050301",name:"mappingMetaItem",icon:"mapping",text:"专题融合库",href:'/dataproc/stats-analysis/mapping'},
+                {id:"050302",name:"dataFusion",icon:"fusion",text:"数据融合",href:'/dataproc/stats-analysis/fusion'}
             ]},
                 /**
             {id: "050200",group:"dataproc-mydata",name:'mydata', route: "(submenu)/dataproc/mydata/d-all/[...folder]",text: "我的数据",href: "/dataproc/mydata/d-all/top",icon:'folder',children:[
@@ -108,15 +101,24 @@ export const findAppMenus = async ():Promise<MenuInfo[]> => {
                         {id:'060203',name:'macroDataConfirm',text:'数据确权',icon:'surveyGroup',href: '/datamacro/data/confirm'},
                     ]
                 },{
-                    id:'060300',name:'macroData',text:'数据发布',icon:'cube',
+                    id:'060300',name:'macroData',text:'查询管理',icon:'cube',
                     children: [
-                        {id:'060301',name:'macroTopic',text:'发布主题',icon:'topic',href: '/datamacro/metadata/topic'},
-                        {id:'060302',name:'macroDataMng',text:'发布场景',icon:'surveyIndicator',href: '/datamacro/metadata/scene'},
+                        {id:'060301',name:'macroTopic',text:'查询主题',icon:'topic',href: '/datamacro/metadata/topic'},
+                        {id:'060302',name:'macroDataMng',text:'查询场景',icon:'surveyIndicator',href: '/datamacro/metadata/scene'},
                     ]
                 }
             ]
         },
-
+        {id:'070000',name:'datanalysis',icon:'dataAnalysis',text:'数据应用',href:'/datanalysis',
+            children:[
+                {id:'070100',name:'analysisdata',text:'数据准备',icon:'database',href:'/datanalysis/data'},
+                {id:'070200',name:'dashboard',text:'数据看板',icon:'dashboard',href:'/datanalysis/dashboard'},
+                {id:'070300',name:'chart',text:'数据图表',icon:'chart',href:'/datanalysis/chart'},
+                {id:'070400',name:'analysisdoc',text:'分析报告',icon:'doc',href:'/datanalysis/doc'},
+                {id:'070500',name:'geodata',text:'数据地图',icon:'geo',href:'/datanalysis/geo'},
+                {id:'070600',name:'statsml',text:'高阶统计分析',icon:'ml',href:'/datanalysis/ml'},
+            ]
+        },
         // {id:'910000',name:'notebook',text:'笔记',href: '/notebook/local',icon:'notebook'},
         // {id:'920000',name:'taskList',text:'日程',href: '/task-list/month',icon:'taskList'},
         {id:'990000',name:'settings',text:'配置',href: '/settings',

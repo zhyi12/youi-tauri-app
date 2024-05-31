@@ -20,7 +20,7 @@
      */
     export let pathname = undefined;
 
-    $: if(pathname){
+    $: if(pathname && submenu){
         calculateActiveHref(submenu.children,pathname)
     }
 
@@ -52,8 +52,10 @@
     }
 </script>
 
-<RecursiveList {icons}
-               class="menu w-52 rounded-box space-y-1"
-               itemClass="pt-1.5 pb-1.5 mt-0.5"
-               children={submenu.children}>
-</RecursiveList>
+{#if submenu}
+    <RecursiveList {icons}
+                   class="menu w-52 rounded-box space-y-1"
+                   itemClass="pt-1.5 pb-1.5 mt-0.5"
+                   children={submenu.children}>
+    </RecursiveList>
+{/if}

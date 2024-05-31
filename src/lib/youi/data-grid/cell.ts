@@ -49,7 +49,7 @@ export const drawCell = (parent,cell,showGrid) => {
     const group = new Konva.Group({
         x:cell.x, y:cell.y, width:cell.width, height:cell.height,
         clipX:0,
-        //clipWidth:cell.width,
+        // clipWidth:cell.width,
         clipHeight:cell.height
     });
 
