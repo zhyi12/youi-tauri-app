@@ -6,6 +6,7 @@ export {default as DataGrid} from './data-grid/DataGrid.svelte';
 export {default as VDataTable} from './data-grid/VDataTable.svelte';
 export {default as CrossTable} from './data-grid/CrossTable.svelte';
 export {default as Grid} from './data-grid/Grid.svelte';
+export {default as Box} from './data-grid/Box.svelte';
 export {default as TabContent} from './tabs/TabContent.svelte';
 export {default as TabPane} from './tabs/TabPane.svelte';
 export {default as Tree} from './tree/Tree.svelte';
@@ -17,8 +18,10 @@ export {default as DropdownMenu} from './dropdown/DropdownMenu.svelte';
 export {default as DropdownItem} from './dropdown/DropdownItem.svelte';
 
 export {default as RecursiveList} from './list/RecursiveList.svelte';
+export {default as Ruler} from './ruler/Ruler.svelte';
 export {default as Tooltip} from './tooltip/Tooltip.svelte';
 export {default as Toolbar} from './toolbar/Toolbar.svelte';
+export {default as Modal} from './modal/Modal.svelte';
 
 export { default as Icon } from './icon/Icon.svelte';
 export { default as addChildIcon } from './icons/addChild';
