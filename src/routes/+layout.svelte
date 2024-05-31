@@ -52,18 +52,26 @@
 
 </script>
 
-<div class="bg-white h-dvh  border-t border-gray-50">
-	<!--  左侧窄菜单	-->
-	<div class="lg:w-20 pb-4 overflow-auto hidden lg:block z-50 fixed inset-y-0 bg-gray-900">
-		<div class="justify-center items-center h-16 flex shrink-0">
 
-		</div>
-		<LeftMenu menus={data.menus} activeModule={data.activeModule}/>
+{#if $page.params._windowType === 'window'}
+	<div class="bg-white h-full">
+		<slot/>
 	</div>
-	<main class="lg:pl-20 h-dvh flex flex-col">
-		<Header navPaths={$navPaths}/>
-		<div class="flex flex-1 h-0">
-			<slot/>
+{:else}
+	<div class="bg-white h-dvh  border-t border-gray-50">
+		<!--  左侧窄菜单	-->
+		<div class="lg:w-20 pb-4 overflow-auto hidden lg:block z-50 fixed inset-y-0 bg-gray-900">
+			<div class="justify-center items-center h-16 flex shrink-0">
+
+			</div>
+			<LeftMenu menus={data.menus} activeModule={data.activeModule}/>
 		</div>
-	</main>
-</div>
+		<main class="lg:pl-20 h-dvh flex flex-col">
+			<Header navPaths={$navPaths}/>
+			<div class="flex flex-1 h-0">
+				<slot/>
+			</div>
+		</main>
+	</div>
+{/if}
+
