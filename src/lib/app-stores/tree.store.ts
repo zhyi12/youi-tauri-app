@@ -116,6 +116,20 @@ export const createTreeStore = <T> (service:ITreeService<T>) => {
             return set({nodes,expandedIds,activeId})
         },
 
+        /**
+         * 加载下级节点
+         */
+        load:async (pid)=>{
+            const nodes = await service.fetch({pid,maxLevel:100});
+            return update(model=>{
+                const node = findTreeNode(model.nodes,pid.toString());
+                if(node && nodes[0] && nodes[0].children){
+                    node.children = nodes[0].children;
+                }
+                return model
+            });
+        },
+
         addChild,
 
         insertBefore,

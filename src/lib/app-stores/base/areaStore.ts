@@ -21,10 +21,12 @@ export const createStore = () => {
             const areas = await findAreaTree(params.pid,params.maxLevel);
             const rootArea = await findArea(params.pid);
 
-            return [{
+            const nodes = [{
                 ...toTreeItem(rootArea),
-                children:levelListToTree(areas)
+                children:levelListToTree(areas,undefined,params.maxLevel-1)
             }];
+
+            return nodes;
         },
 
         async findNode(id:number):Promise<TreeItem>{
