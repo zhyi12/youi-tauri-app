@@ -1,10 +1,11 @@
 <script lang="ts">
 
+    import {onMount} from 'svelte';
     import TreeText from "./TreeText.svelte";
     import {getContext} from "svelte";
-    import Icon from "../icon/Icon.svelte";
+    import {Icon,refreshIcon} from "../index";
 
-    const {treeConfig,hoverNodeId,selectNode,dblClick,selectedNodeIds,icons} = getContext('Tree');
+    const {treeConfig,hoverNodeId,selectNode,dblClick,selectedNodeIds,loadChildren,icons} = getContext('Tree');
 
     export let id = '';
     export let text = '';
@@ -16,28 +17,40 @@
 
     $:selected = $selectedNodeIds.includes(id);
     $:hovered = $hoverNodeId === id;
+    $:loading = datas && datas.loading;
 
+    onMount(()=>{
+        if(loading && datas.id){
+            loadChildren(datas);
+        }
+    });
 </script>
 
 <li {id}>
-    <TreeText {level} {selected}
-              on:mouseenter={()=>{ $hoverNodeId = id }}
-              on:mouseleave={()=>{ $hoverNodeId = undefined }}
-              on:dblclick={()=>dblClick({id})}
-              on:click={()=>selectNode({id})}>
-        {#if icon && icons}
-            {@const iconData = icons(icon)}
-            <div><Icon class="w-4 h-4 mr-0.5 -mt-0.5" data={iconData}/></div>
-        {/if}
-        {#if $treeConfig.nodeRender}
-            {@const result = $treeConfig.nodeRender({id,text,group,hovered,selected})}
-            {#if result.component && result.props}
-                <svelte:component this={result.component} {...result.props} />
-            {:else if typeof result === 'string' || typeof result === 'number'}
-                {result}
+
+        <TreeText {level} {selected}
+                  on:mouseenter={()=>{ if(!loading) $hoverNodeId = id }}
+                  on:mouseleave={()=>{ if(!loading) $hoverNodeId = undefined }}
+                  on:dblclick={()=>!loading && dblClick({id})}
+                  on:click={()=>!loading && selectNode({id})}>
+
+            {#if loading}
+                <div><Icon class="w-4 h-4 mr-0.5 -mt-0.5" spin={true} data={refreshIcon}/></div><span>加载中...</span>
+            {:else}
+                {#if icon && icons}
+                    {@const iconData = icons(icon)}
+                    <div><Icon class="w-4 h-4 mr-0.5 -mt-0.5" data={iconData}/></div>
+                {/if}
+                {#if $treeConfig.nodeRender}
+                    {@const result = $treeConfig.nodeRender({id,text,group,hovered,selected})}
+                    {#if result.component && result.props}
+                        <svelte:component this={result.component} {...result.props} />
+                    {:else if typeof result === 'string' || typeof result === 'number'}
+                        {result}
+                    {/if}
+                {:else}
+                    {text}
+                {/if}
             {/if}
-        {:else}
-            {text}
-        {/if}
-    </TreeText>
+        </TreeText>
 </li>

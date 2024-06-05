@@ -75,7 +75,7 @@
         </a>
     </Tooltip>
 {:else}
-    <div class="tooltip whitespace-nowrap" data-tip={text}>
+    <div class="tooltip whitespace-nowrap tooltip-bottom" data-tip={text}>
         <div class="overflow-hidden h-6">{text}</div>
     </div>
     {#if hovered || selected}

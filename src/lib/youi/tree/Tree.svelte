@@ -88,6 +88,13 @@
             }
         },
 
+        /**
+         * 动态加载
+         */
+        loadChildren:(data)=>{
+            dispatch('load',{...data});
+        },
+
         dblClick:(node)=>{
             // 叶子节点的双击事件
             dispatch('dblclick',node);

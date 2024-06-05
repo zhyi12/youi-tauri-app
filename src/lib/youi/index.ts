@@ -37,6 +37,7 @@ export { default as plusIcon } from './icons/plus';
 export { default as saveIcon } from './icons/save';
 export { default as removeIcon } from './icons/remove';
 export { default as renameIcon } from './icons/rename';
+export { default as refreshIcon } from './icons/refresh';
 
 export * from './util/tree.util';
 export * from './util/classname';
