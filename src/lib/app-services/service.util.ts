@@ -41,8 +41,11 @@ export async function findByPager<T>(pager:Pager,selectSql,entity?:T) {
 
 /**
  *
+ * @param list
+ * @param nodeProcessor
+ * @param maxLevel 等于最大层级的节点，如果存在子节点，只留下loading节点
  */
-export function levelListToTree<T extends TreeObject>(list:T[],nodeProcessor?:(TreeItem,T)=>void):TreeItem[]{
+export function levelListToTree<T extends TreeObject>(list:T[],nodeProcessor?:(TreeItem,T)=>void,maxLevel?:number):TreeItem[]{
     if(list.length === 0 )return [];
 
     const treeNodes:TreeItem[] = [];
@@ -56,7 +59,8 @@ export function levelListToTree<T extends TreeObject>(list:T[],nodeProcessor?:(T
             text:obj.text,
             datas:{
                 dataId:obj.id,
-                num:obj.num
+                num:obj.num,
+                level:obj.level
             }
         }
 
@@ -74,8 +78,12 @@ export function levelListToTree<T extends TreeObject>(list:T[],nodeProcessor?:(T
             const parentLevelKey = buildLevelKey((obj.level||1)-1);
             const parentNode:TreeItem = levelMaps[parentLevelKey];
             if(parentNode){
-                parentNode.children = parentNode.children||[];
-                parentNode.children.push(treeItem);
+                if(obj.level === maxLevel){
+                    parentNode.children = [{id:`${parentNode.text}`,text:'',datas:{id:parentNode.id,loading:true}}];
+                }else{
+                    parentNode.children = parentNode.children||[];
+                    parentNode.children.push(treeItem);
+                }
             }
         }
     }
