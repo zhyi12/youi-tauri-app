@@ -14,11 +14,6 @@ itertools.workspace = true
 void = "1.0.2"
 polars-core={workspace = true,features=["ndarray"]}
 polars-io = {workspace = true,features=["json","csv"]}
-ndarray.workspace = true
-
-linfa = "0.7.0"
-linfa-linear = "0.7.0"
-linfa-datasets = {version= "0.7.0",features=["diabetes"]}
 
 youi-report={version="1.1.0",path="../report"}
 
