@@ -11,7 +11,7 @@ use youi_test::find_real_path;
 #[test]
 pub fn test1()->Result<(), Box<dyn std::error::Error>> {
 
-    let path = find_real_path("chart","xy.csv");
+    let path = find_real_path("ml","xy.csv");
 
     let df = polars_io::prelude::CsvReader::from_path(&path)?
         .infer_schema(None)
