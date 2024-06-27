@@ -1,0 +1,139 @@
+{
+  "id": "5",
+  "steps": [
+    {
+      "id": "edf52b33-7f19-4ea9-a56d-c5a8f369d95d",
+      "name": "Reader",
+      "reader": "CsvReader",
+      "uri": "/Volumes/D/youi-app-data/我的数据/test2500.csv",
+      "text": "数据选择",
+      "columns": [
+        {
+          "name": "RegType",
+          "text": "RegType",
+          "dataType": "i64"
+        },
+        {
+          "name": "IndustryType",
+          "text": "IndustryType",
+          "dataType": "i64"
+        },
+        {
+          "name": "Scale",
+          "text": "Scale",
+          "dataType": "i64"
+        },
+        {
+          "name": "营业收入",
+          "text": "营业收入",
+          "dataType": "f64"
+        },
+        {
+          "name": "年末从业人员人数",
+          "text": "年末从业人员人数",
+          "dataType": "f64"
+        },
+        {
+          "name": "在岗职工",
+          "text": "在岗职工",
+          "dataType": "f64"
+        },
+        {
+          "name": "劳务派遣人员",
+          "text": "劳务派遣人员",
+          "dataType": "f64"
+        },
+        {
+          "name": "从业人员工资总额",
+          "text": "从业人员工资总额",
+          "dataType": "f64"
+        },
+        {
+          "name": "从业人员平均工资",
+          "text": "从业人员平均工资",
+          "dataType": "f64"
+        },
+        {
+          "name": "资产总计",
+          "text": "资产总计",
+          "dataType": "f64"
+        },
+        {
+          "name": "流动资产合计",
+          "text": "流动资产合计",
+          "dataType": "f64"
+        },
+        {
+          "name": "应收账款",
+          "text": "应收账款",
+          "dataType": "f64"
+        },
+        {
+          "name": "产成品",
+          "text": "产成品",
+          "dataType": "f64"
+        },
+        {
+          "name": "长期股权投资",
+          "text": "长期股权投资",
+          "dataType": "f64"
+        },
+        {
+          "name": "固定资产原价",
+          "text": "固定资产原价",
+          "dataType": "f64"
+        },
+        {
+          "name": "OrgCode",
+          "text": "OrgCode",
+          "dataType": "i64"
+        }
+      ],
+      "selectedColumnNames": [
+        "RegType",
+        "IndustryType",
+        "Scale",
+        "营业收入",
+        "年末从业人员人数",
+        "在岗职工",
+        "劳务派遣人员",
+        "从业人员工资总额",
+        "从业人员平均工资",
+        "资产总计",
+        "流动资产合计",
+        "应收账款",
+        "产成品",
+        "长期股权投资",
+        "固定资产原价",
+        "OrgCode"
+      ]
+    },
+    {
+      "id": "8f0830bb-028d-47f1-976b-9789dd3bb16b",
+      "name": "Agg",
+      "text": "分组汇总",
+      "groupNames": [
+        "IndustryType"
+      ],
+      "measureItems": [
+        {
+          "name": "营业收入",
+          "text": "营业收入",
+          "aggregate": "sum",
+          "dataType": "f64"
+        },{
+          "name": "营业收入1",
+          "text": "营业收入1",
+          "aggregate": "sum",
+          "dataType": "f64"
+        }
+      ]
+    }
+  ],
+  "columnInfos": [
+    {
+      "name": "IndustryType",
+      "width": 89
+    }
+  ]
+}

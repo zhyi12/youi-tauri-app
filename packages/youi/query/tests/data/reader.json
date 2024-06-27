@@ -1,0 +1,57 @@
+{
+  "steps": [
+    {
+      "id": "57a5b4bc-39f4-4dd7-9f4c-a1e8b423fdec",
+      "name": "Reader",
+      "reader": "CsvReader",
+      "uri": "/Volumes/D/youi-app-data/我的数据/jp/000000_20230000_611.csv",
+      "text": "数据选择",
+      "columns": [
+        {
+          "name": "respondent_id",
+          "text": "respondent_id",
+          "dataType": "text"
+        },
+        {
+          "name": "period_id",
+          "text": "period_id",
+          "dataType": "text"
+        },
+        {
+          "name": "area_id",
+          "text": "area_id",
+          "dataType": "text"
+        },
+        {
+          "name": "industry_type",
+          "text": "industry_type",
+          "dataType": "text"
+        },
+        {
+          "name": "construction_qualifications",
+          "text": "construction_qualifications",
+          "dataType": "str"
+        },
+        {
+          "name": "reg_address_area",
+          "text": "reg_address_area",
+          "dataType": "str"
+        },
+        {
+          "name": "report_type",
+          "text": "report_type",
+          "dataType": "str"
+        }
+      ],
+      "selectedColumnNames": [
+        "respondent_id",
+        "period_id",
+        "area_id",
+        "industry_type",
+        "construction_qualifications",
+        "reg_address_area",
+        "report_type"
+      ]
+    }
+  ]
+}

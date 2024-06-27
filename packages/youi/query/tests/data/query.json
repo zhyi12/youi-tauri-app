@@ -1,0 +1,280 @@
+{
+  "id": "8",
+  "steps": [
+    {
+      "id": "e7e40330-1bdf-47cf-bd0a-31485c57e67f",
+      "name": "Reader",
+      "reader": "CsvReader",
+      "uri": "/Volumes/D/youi-app-data/我的数据/jp/000000_20230000_611.csv",
+      "text": "数据选择",
+      "columns": [
+        {
+          "name": "respondent_id",
+          "text": "respondent_id",
+          "dataType": "i64"
+        },
+        {
+          "name": "period_id",
+          "text": "period_id",
+          "dataType": "i64"
+        },
+        {
+          "name": "area_id",
+          "text": "area_id",
+          "dataType": "i64"
+        },
+        {
+          "name": "industry_type",
+          "text": "industry_type",
+          "dataType": "i64"
+        },
+        {
+          "name": "construction_qualifications",
+          "text": "construction_qualifications",
+          "dataType": "str"
+        },
+        {
+          "name": "reg_address_area",
+          "text": "reg_address_area",
+          "dataType": "str"
+        },
+        {
+          "name": "report_type",
+          "text": "report_type",
+          "dataType": "str"
+        }
+      ],
+      "selectedColumnNames": [
+        "respondent_id",
+        "period_id",
+        "area_id",
+        "industry_type",
+        "construction_qualifications",
+        "reg_address_area",
+        "report_type"
+      ]
+    },
+    {
+      "id": "d712e254-a0dd-4aa9-b54f-c61c7be07c6c",
+      "name": "Join",
+      "text": "左右连接",
+      "reader": "CsvReader",
+      "uri": "/Volumes/D/youi-app-data/我的数据/jp/000000_20230000_611_2.csv",
+      "columns": [
+        {
+          "name": "respondent_id",
+          "text": "respondent_id",
+          "dataType": "i64"
+        },
+        {
+          "name": "period_id",
+          "text": "period_id",
+          "dataType": "i64"
+        },
+        {
+          "name": "area_id",
+          "text": "area_id",
+          "dataType": "i64"
+        },
+        {
+          "name": "employee",
+          "text": "employee",
+          "dataType": "i64"
+        }
+      ],
+      "selectedColumnNames": [
+        "respondent_id",
+        "period_id",
+        "area_id",
+        "employee"
+      ],
+      "joinColumns": [
+        {
+          "name": "respondent_id",
+          "left": "respondent_id",
+          "right": "respondent_id"
+        },
+        {
+          "name": "period_id",
+          "left": "period_id",
+          "right": "period_id"
+        },
+        {
+          "name": "area_id",
+          "left": "area_id",
+          "right": "area_id"
+        }
+      ],
+      "how": "left",
+      "unionColumns": [
+        {
+          "name": "respondent_id",
+          "inputName": "respondent_id",
+          "dataType": "",
+          "unionName": ""
+        },
+        {
+          "name": "period_id",
+          "inputName": "period_id",
+          "dataType": "",
+          "unionName": ""
+        },
+        {
+          "name": "area_id",
+          "inputName": "area_id",
+          "dataType": "",
+          "unionName": ""
+        },
+        {
+          "name": "industry_type",
+          "inputName": "industry_type",
+          "dataType": "",
+          "unionName": ""
+        },
+        {
+          "name": "construction_qualifications",
+          "inputName": "construction_qualifications",
+          "dataType": "",
+          "unionName": ""
+        },
+        {
+          "name": "reg_address_area",
+          "inputName": "reg_address_area",
+          "dataType": "",
+          "unionName": ""
+        },
+        {
+          "name": "report_type",
+          "inputName": "report_type",
+          "dataType": "",
+          "unionName": ""
+        }
+      ],
+      "readers": []
+    },
+    {
+      "id": "03075957-13e5-42f4-afde-adb805599d90",
+      "name": "Union",
+      "text": "上下连接",
+      "unionColumns": [
+        {
+          "name": "respondent_id",
+          "inputName": "respondent_id",
+          "dataType": "text",
+          "unionNames": [
+            "respondent_id"
+          ]
+        },
+        {
+          "name": "period_id",
+          "inputName": "period_id",
+          "dataType": "text",
+          "unionNames": [
+            "period_id"
+          ]
+        },
+        {
+          "name": "area_id",
+          "inputName": "area_id",
+          "dataType": "text",
+          "unionNames": [
+            "area_id"
+          ]
+        },
+        {
+          "name": "industry_type",
+          "inputName": "industry_type",
+          "dataType": "i64",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "construction_qualifications",
+          "inputName": "construction_qualifications",
+          "dataType": "str",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "reg_address_area",
+          "inputName": "reg_address_area",
+          "dataType": "str",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "report_type",
+          "inputName": "report_type",
+          "dataType": "str",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "respondent_id_right",
+          "inputName": "respondent_id_right",
+          "dataType": "i64",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "period_id_right",
+          "inputName": "period_id_right",
+          "dataType": "i64",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "area_id_right",
+          "inputName": "area_id_right",
+          "dataType": "i64",
+          "unionNames": [
+            ""
+          ]
+        },
+        {
+          "name": "employee",
+          "inputName": "employee",
+          "dataType": "i64",
+          "unionNames": [
+            ""
+          ]
+        }
+      ],
+      "readers": [
+        {
+          "reader": "CsvReader",
+          "uri": "/Volumes/D/youi-app-data/我的数据/jp/000000_20230000_611_6.csv",
+          "columns": [
+            {
+              "name": "respondent_id",
+              "text": "respondent_id",
+              "dataType": "i64"
+            },
+            {
+              "name": "period_id",
+              "text": "period_id",
+              "dataType": "i64"
+            },
+            {
+              "name": "area_id",
+              "text": "area_id",
+              "dataType": "i64"
+            }
+          ],
+          "selectedColumnNames": [
+            "respondent_id",
+            "period_id",
+            "area_id"
+          ]
+        }
+      ]
+    }
+  ],
+  "columnInfos": []
+}

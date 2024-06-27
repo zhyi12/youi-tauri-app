@@ -15,21 +15,22 @@ pub struct FilterItem{
     ///
     /// 所属数据表
     ///
+    #[serde(skip_serializing_if = "Option::is_none")]
     data_table_name:Option<String>,
     ///
     /// 属性
     ///
-    property:String,
+    pub(crate) property:String,
 
     ///
     ///
     ///
-    text:String,
+    text:Option<String>,
     ///
     /// 比较符
     /// eq|gt|gte|lt|lte|start_with|end_with|like|in
     ///
-    operator:String,
+    pub(crate) operator:String,
     ///
     /// 值
     ///
@@ -74,14 +75,15 @@ impl FilterItem{
     }
 
     pub fn get_text(&self) -> String {
-        self.text.to_string()
+        self.text.as_ref().unwrap_or(&"".to_string()).to_string()
     }
 
     ///
     ///
     ///
     pub fn get_value_str(&self)->String{
-        self.value_utf8(&self.value[0])
+        let value = if self.value.is_empty() {&DataType::String("".to_string())} else {&self.value[0]};
+        self.value_utf8(value)
     }
     ///
     ///
